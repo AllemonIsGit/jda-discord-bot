@@ -1,0 +1,12 @@
+org\example\prefixcommand\TextCommand.class
+org\example\listener\GlobalListener.class
+org\example\Main.class
+org\example\slashcommand\SlashDelete.class
+org\example\prefixcommand\DeleteMessageCommand.class
+org\example\prefixcommand\PolicjaCommand.class
+org\example\manager\TextCommandManager.class
+org\example\service\EventService.class
+org\example\manager\SlashCommandManager.class
+org\example\prefixcommand\HelloCommand.class
+org\example\prefixcommand\ChuckNorrisJokeCommand.class
+org\example\slashcommand\SlashCommand.class
