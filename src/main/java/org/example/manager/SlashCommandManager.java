@@ -1,15 +1,19 @@
 package org.example.manager;
 
+import lombok.Getter;
 import org.example.slashcommand.SlashCommand;
+import org.example.slashcommand.SlashDelete;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SlashCommandManager {
-    private final List<SlashCommand> slashCommands;
+    @Getter
+    private final List<SlashCommand> slashCommands = new ArrayList<>();
 
     public SlashCommandManager() {
-        this.slashCommands = new ArrayList<>();
+        register(new SlashDelete());
+
     }
 
     private void register(SlashCommand command) {
