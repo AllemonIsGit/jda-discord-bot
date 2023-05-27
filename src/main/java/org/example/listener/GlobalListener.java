@@ -5,17 +5,17 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.example.manager.SlashCommandManager;
 import org.example.manager.TextCommandManager;
-import org.example.textcommand.TextCommand;
 import org.example.service.EventService;
+import org.example.service.InsultService;
 import org.example.slashcommand.SlashCommand;
+import org.example.textcommand.TextCommand;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class GlobalListener extends ListenerAdapter {
     private final TextCommandManager textCommandManager;
@@ -23,6 +23,7 @@ public class GlobalListener extends ListenerAdapter {
     private final List<TextCommand> textCommands;
     private final List<SlashCommand> slashCommands;
     private final EventService eventService;
+    private final Integer insultThreshold = 2;
 
     public GlobalListener() {
         this.eventService = new EventService();
@@ -55,6 +56,7 @@ public class GlobalListener extends ListenerAdapter {
         List<String> splitMessage = eventService.splitMessageOnSpace(eventService.getMessageFromEvent(event));
 
         if (!eventService.checkForPrefix(splitMessage.get(0))) {
+            rollInsult(event);
             return;
         }
 
@@ -64,6 +66,14 @@ public class GlobalListener extends ListenerAdapter {
             if (splitMessage.get(0).equalsIgnoreCase(command.getInvokePhrase())) {
                 command.execute(event);
             }
+        }
+    }
+
+    public void rollInsult(@NotNull MessageReceivedEvent event) {
+        Random random = new Random();
+
+        if (random.nextInt(100) <= insultThreshold) {
+            InsultService.insult(event);
         }
     }
 }

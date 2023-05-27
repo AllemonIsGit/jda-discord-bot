@@ -35,7 +35,7 @@ public class SlashAddInsult implements SlashCommand {
             event.reply("Something went wrong.").setEphemeral(true).queue();
             return;
         }
-        InsultService.Register(insult);
+        InsultService.register(insult);
         event.reply("Added!").setEphemeral(true).queue();
         event.getChannel().sendMessage("I've got a new insult in my list!").queue();
     }

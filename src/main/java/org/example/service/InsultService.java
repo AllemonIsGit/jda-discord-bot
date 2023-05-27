@@ -10,7 +10,7 @@ import java.util.Random;
 public class InsultService {
     private final static List<String> insults = new ArrayList<>();
 
-    public static void Insult(MessageReceivedEvent event) {
+    public static void insult(MessageReceivedEvent event) {
         User author = event.getAuthor();
         event.getChannel().sendMessage(author.getAsMention() + " " + getRandomInsult()).queue();
     }
@@ -19,6 +19,10 @@ public class InsultService {
     }
     private static String getRandomInsult() {
         Random random = new Random();
+
+        if (insults.size() == 0) {
+            return "I don't have any insults on my list.";
+        }
 
         return insults.get(random.nextInt(insults.size()));
     }

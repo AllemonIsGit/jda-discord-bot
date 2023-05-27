@@ -12,6 +12,6 @@ public class InsultCommand implements TextCommand {
 
     @Override
     public void execute(MessageReceivedEvent event) {
-        InsultService.Insult(event);
+        InsultService.insult(event);
     }
 }
