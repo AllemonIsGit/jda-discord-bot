@@ -14,9 +14,11 @@ public class InsultService {
         User author = event.getAuthor();
         event.getChannel().sendMessage(author.getAsMention() + " " + getRandomInsult()).queue();
     }
-    public static void Register(String insult) {
+
+    public static void register(String insult) {
         insults.add(insult);
     }
+
     private static String getRandomInsult() {
         Random random = new Random();
 

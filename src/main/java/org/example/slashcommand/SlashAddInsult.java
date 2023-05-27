@@ -14,9 +14,8 @@ public class SlashAddInsult implements SlashCommand {
     private final String optionDescription = "type your insult here";
     private final CommandData data;
 
-
     public SlashAddInsult() {
-        OptionData option = new OptionData(OptionType.STRING ,optionName, optionDescription);
+        OptionData option = new OptionData(OptionType.STRING, optionName, optionDescription);
         this.data = new CommandDataImpl(commandName, commandDescription).addOptions(option);
     }
 
