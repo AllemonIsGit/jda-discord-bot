@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.example.manager.SlashCommandManager;
 import org.example.manager.TextCommandManager;
 import org.example.textcommand.TextCommand;
@@ -11,6 +13,7 @@ import org.example.service.EventService;
 import org.example.slashcommand.SlashCommand;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,12 +46,8 @@ public class GlobalListener extends ListenerAdapter {
 
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
-        for (SlashCommand slashCommand : slashCommands) {
-            event.getGuild()
-                    .updateCommands()
-                    .addCommands(slashCommand.getData())
-                    .queue();
-        }
+        List<CommandData> data = slashCommandManager.getSlashCommandsData();
+        event.getGuild().updateCommands().addCommands(data).queue();
     }
 
     @Override

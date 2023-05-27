@@ -12,6 +12,7 @@ public class TextCommandManager {
         register(new HelloCommand());
         register(new PolicjaCommand());
         register(new DogPicCommand());
+        register(new InsultCommand());
     }
 
     public List<TextCommand> getTextCommands() {
