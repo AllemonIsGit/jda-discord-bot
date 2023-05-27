@@ -1,6 +1,6 @@
 package org.example.manager;
 
-import org.example.prefixcommand.*;
+import org.example.textcommand.*;
 
 import java.util.ArrayList;
 import java.util.List;

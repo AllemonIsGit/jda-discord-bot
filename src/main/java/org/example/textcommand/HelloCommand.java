@@ -1,17 +1,16 @@
-package org.example.prefixcommand;
+package org.example.textcommand;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class PolicjaCommand implements TextCommand {
-    String invokePhrase = "policja";
+public class HelloCommand implements TextCommand {
+    String invokePhrase = "hello";
 
     @Override
     public String getInvokePhrase() {
         return invokePhrase;
     }
-
     @Override
     public void execute(MessageReceivedEvent event) {
-        event.getChannel().sendMessage("Jebać policje!").queue();
+        event.getChannel().sendMessage("Hello World!").queue();
     }
 }

@@ -1,4 +1,4 @@
-package org.example.prefixcommand;
+package org.example.textcommand;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.Getter;

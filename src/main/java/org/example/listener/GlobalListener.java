@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.example.manager.SlashCommandManager;
 import org.example.manager.TextCommandManager;
-import org.example.prefixcommand.TextCommand;
+import org.example.textcommand.TextCommand;
 import org.example.service.EventService;
 import org.example.slashcommand.SlashCommand;
 import org.jetbrains.annotations.NotNull;

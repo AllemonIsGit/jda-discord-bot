@@ -1,4 +1,4 @@
-package org.example.prefixcommand;
+package org.example.textcommand;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
