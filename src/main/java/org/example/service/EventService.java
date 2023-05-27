@@ -28,4 +28,8 @@ public class EventService {
         message.set(0, firstString);
         return message;
     }
+
+    public String removePrefix(String message) {
+        return message.substring(1);
+    }
 }

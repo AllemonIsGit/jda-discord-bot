@@ -12,11 +12,11 @@ import org.example.slashcommand.SlashCommand;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public class GlobalListener extends ListenerAdapter {
     private final TextCommandManager textCommandManager;
     private final SlashCommandManager slashCommandManager;
-
     private final List<TextCommand> textCommands;
     private final List<SlashCommand> slashCommands;
     private final EventService eventService;
@@ -33,13 +33,21 @@ public class GlobalListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-
+        String command = event.getFullCommandName();
+        for (SlashCommand slashCommand : slashCommands) {
+            if (Objects.equals(command, slashCommand.getData().getName())) {
+                slashCommand.execute(event);
+            }
+        }
     }
 
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
         for (SlashCommand slashCommand : slashCommands) {
-            event.getGuild().updateCommands().addCommands(slashCommand.getData()).queue();
+            event.getGuild()
+                    .updateCommands()
+                    .addCommands(slashCommand.getData())
+                    .queue();
         }
     }
 
@@ -58,27 +66,5 @@ public class GlobalListener extends ListenerAdapter {
                 command.execute(event);
             }
         }
-
-
     }
-
-//    private String getMessageFromEvent(MessageReceivedEvent event) {
-//        return event.getMessage().getContentRaw();
-//    }
-//
-//    private Boolean checkForPrefix(String message) {
-//        return message.startsWith(prefix);
-//    }
-//
-//    private List<String> splitMessageOnSpace(String message) {
-//        String[] splitMessage = message.split(" ");
-//       return new ArrayList<>(Arrays.asList(splitMessage));
-//    }
-//
-//    private List<String> removePrefix(List<String> message) {
-//        String firstString = message.get(0);
-//        firstString = firstString.substring(1);
-//        message.set(0, firstString);
-//        return message;
-//    }
 }

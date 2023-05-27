@@ -11,7 +11,6 @@ public class TextCommandManager {
     public TextCommandManager() {
         register(new HelloCommand());
         register(new PolicjaCommand());
-        register(new DeleteMessageCommand());
         register(new DogPicCommand());
     }
 
