@@ -1,13 +1,14 @@
-package org.example.model;
+package org.example.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 
 @Entity
 @Table(name = "insults")
 @Data
+@NoArgsConstructor
 public class Insult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

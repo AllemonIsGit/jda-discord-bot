@@ -28,8 +28,8 @@ public class GlobalListener extends ListenerAdapter {
     private final InsultService insultService;
     private final Integer insultThreshold = 20;
 
-    public GlobalListener() {
-        this.globalSingletonManager = new GlobalSingletonManager();
+    public GlobalListener(GlobalSingletonManager globalSingletonManager) {
+        this.globalSingletonManager = globalSingletonManager;
 
         this.eventService = globalSingletonManager.getEventService();
         this.insultService = globalSingletonManager.getInsultService();

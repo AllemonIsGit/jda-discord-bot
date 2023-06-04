@@ -8,7 +8,7 @@
         <property name="connection.url">jdbc:mysql://localhost:3306/jda-bot-db?autoReconnect=true</property>
         <property name="connection.username">root</property>
         <property name="connection.password">root</property>
-        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
         <property name = "hibernate.connection.url">
             jdbc:mysql://localhost:3306/jda-bot-db
         </property>
@@ -30,7 +30,7 @@
         <property name="format_sql">true</property>
 
         <!-- Mapping files -->
-        <mapping class="org.example.model.Insult" />
+        <mapping class="org.example.domain.model.Insult" />
         <!-- Add your entity class mappings here -->
     </session-factory>
 </hibernate-configuration>
