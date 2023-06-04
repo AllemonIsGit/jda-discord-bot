@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Random;
 
 public class InsultService {
+    private static InsultService INSTANCE;
     private final List<Insult> insults;
     private final InsultRepository insultRepository;
 
-    public InsultService() {
-//        this.insults = new ArrayList<>();
-        this.insultRepository = new InsultRepository();
+    private InsultService() {
+        this.insultRepository = InsultRepository.getInstance();
 
         this.insults = insultRepository.findAll();
     }
@@ -44,5 +44,13 @@ public class InsultService {
 
     private Insult mapToInsult(String text) {
         return new Insult(text);
+    }
+
+    public static InsultService getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new InsultService();
+            return INSTANCE;
+        }
+        return INSTANCE;
     }
 }

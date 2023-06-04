@@ -10,10 +10,11 @@ import org.hibernate.query.Query;
 import java.util.List;
 
 public class InsultRepository {
+    private static InsultRepository INSTANCE;
     private final Configuration configuration;
     private final SessionFactory sessionFactory;
 
-    public InsultRepository() {
+    private InsultRepository() {
         this.configuration = new Configuration().configure();
         this.sessionFactory = configuration.buildSessionFactory();
     }
@@ -38,5 +39,13 @@ public class InsultRepository {
         session.close();
 
         return list;
+    }
+
+    public static InsultRepository getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new InsultRepository();
+            return INSTANCE;
+        }
+        return INSTANCE;
     }
 }

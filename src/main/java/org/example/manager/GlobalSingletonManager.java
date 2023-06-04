@@ -12,10 +12,10 @@ public class GlobalSingletonManager {
     private final InsultService insultService;
 
     public GlobalSingletonManager() {
-        this.insultService = new InsultService();
-        this.eventService = new EventService();
+        this.insultService = InsultService.getInstance();
+        this.eventService = EventService.getInstance();
 
-        this.slashCommandManager = new SlashCommandManager(insultService);
+        this.slashCommandManager = SlashCommandManager.getInstance();
         this.textCommandManager = new TextCommandManager(insultService);
     }
 }

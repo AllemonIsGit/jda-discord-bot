@@ -11,22 +11,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SlashCommandManager {
+    private static SlashCommandManager INSTANCE;
     @Getter
     private final List<SlashCommand> slashCommands = new ArrayList<>();
 
-    public SlashCommandManager(InsultService insultService) {
+    private SlashCommandManager() {
         register(new SlashClear());
-        register(new SlashAddInsult(insultService));
+        register(new SlashAddInsult(InsultService.getInstance()));
     }
 
     private void register(SlashCommand command) {
         slashCommands.add(command);
     }
+
     public List<CommandData> getSlashCommandsData() {
         List<CommandData> data = new ArrayList<>();
+
         for (SlashCommand slashCommand : slashCommands) {
             data.add(slashCommand.getData());
         }
         return data;
+    }
+
+    public static SlashCommandManager getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new SlashCommandManager();
+            return INSTANCE;
+        }
+        return INSTANCE;
     }
 }

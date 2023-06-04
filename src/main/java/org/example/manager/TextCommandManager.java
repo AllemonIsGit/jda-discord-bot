@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextCommandManager {
+    private static TextCommandManager INSTANCE;
     private final List<TextCommand> textCommands = new ArrayList<>();
 
     public TextCommandManager(InsultService insultService) {
@@ -21,5 +22,13 @@ public class TextCommandManager {
     }
     private void register(TextCommand command) {
         textCommands.add(command);
+    }
+
+    public static TextCommandManager getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new TextCommandManager(InsultService.getInstance());
+            return INSTANCE;
+        }
+        return INSTANCE;
     }
 }

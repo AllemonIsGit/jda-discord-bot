@@ -7,7 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EventService {
+    private static EventService INSTANCE;
     private final String prefix = "!";
+
+    private EventService() {
+
+    }
+
 
     public String getMessageFromEvent(MessageReceivedEvent event) {
         return event.getMessage().getContentRaw();
@@ -31,5 +37,13 @@ public class EventService {
 
     public String removePrefix(String message) {
         return message.substring(1);
+    }
+
+    public static EventService getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new EventService();
+            return INSTANCE;
+        }
+        return INSTANCE;
     }
 }
