@@ -8,18 +8,18 @@ import java.util.List;
 import java.util.Random;
 
 public class InsultService {
-    private final static List<String> insults = new ArrayList<>();
+    private final List<String> insults = new ArrayList<>();
 
-    public static void insult(MessageReceivedEvent event) {
+    public void insult(MessageReceivedEvent event) {
         User author = event.getAuthor();
         event.getChannel().sendMessage(author.getAsMention() + " " + getRandomInsult()).queue();
     }
 
-    public static void register(String insult) {
+    public void register(String insult) {
         insults.add(insult);
     }
 
-    private static String getRandomInsult() {
+    private String getRandomInsult() {
         Random random = new Random();
 
         if (insults.size() == 0) {

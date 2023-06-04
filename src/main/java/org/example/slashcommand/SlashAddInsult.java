@@ -13,8 +13,11 @@ public class SlashAddInsult implements SlashCommand {
     private final String optionName = "add";
     private final String optionDescription = "type your insult here";
     private final CommandData data;
+    private final InsultService insultService;
 
-    public SlashAddInsult() {
+    public SlashAddInsult(InsultService insultService) {
+        this.insultService = insultService;
+
         OptionData option = new OptionData(OptionType.STRING, optionName, optionDescription);
         this.data = new CommandDataImpl(commandName, commandDescription).addOptions(option);
     }
@@ -34,7 +37,7 @@ public class SlashAddInsult implements SlashCommand {
             event.reply("Something went wrong.").setEphemeral(true).queue();
             return;
         }
-        InsultService.register(insult);
+        insultService.register(insult);
         event.reply("Added!").setEphemeral(true).queue();
         event.getChannel().sendMessage("I've got a new insult in my list!").queue();
     }

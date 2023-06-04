@@ -5,6 +5,11 @@ import org.example.service.InsultService;
 
 public class InsultCommand implements TextCommand {
     private final String invokePhrase = "insultme";
+    private final InsultService insultService;
+
+    public InsultCommand(InsultService insultService) {
+        this.insultService = insultService;
+    }
     @Override
     public String getInvokePhrase() {
         return invokePhrase;
@@ -12,6 +17,6 @@ public class InsultCommand implements TextCommand {
 
     @Override
     public void execute(MessageReceivedEvent event) {
-        InsultService.insult(event);
+        insultService.insult(event);
     }
 }

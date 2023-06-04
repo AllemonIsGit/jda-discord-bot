@@ -9,7 +9,7 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
 import java.util.List;
 
-public class SlashDelete implements SlashCommand {
+public class SlashClear implements SlashCommand {
     private final String commandName = "clear";
     private final String commandDescription = "Deletes number of last posted messages";
     private CommandData data;
@@ -17,7 +17,7 @@ public class SlashDelete implements SlashCommand {
     private final String optionDescription = "amount to be deleted";
 
 
-    public SlashDelete() {
+    public SlashClear() {
         OptionData option = new OptionData(OptionType.INTEGER, optionName, optionDescription);
         this.data = new CommandDataImpl(commandName, commandDescription).addOptions(option);
     }

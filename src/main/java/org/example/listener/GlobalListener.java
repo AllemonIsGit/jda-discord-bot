@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import org.example.manager.GlobalSingletonManager;
 import org.example.manager.SlashCommandManager;
 import org.example.manager.TextCommandManager;
 import org.example.service.EventService;
@@ -18,20 +19,25 @@ import java.util.Objects;
 import java.util.Random;
 
 public class GlobalListener extends ListenerAdapter {
+    private final GlobalSingletonManager globalSingletonManager;
     private final TextCommandManager textCommandManager;
     private final SlashCommandManager slashCommandManager;
     private final List<TextCommand> textCommands;
     private final List<SlashCommand> slashCommands;
     private final EventService eventService;
-    private final Integer insultThreshold = 2;
+    private final InsultService insultService;
+    private final Integer insultThreshold = 20;
 
     public GlobalListener() {
-        this.eventService = new EventService();
+        this.globalSingletonManager = new GlobalSingletonManager();
 
-        this.textCommandManager = new TextCommandManager();
+        this.eventService = globalSingletonManager.getEventService();
+        this.insultService = globalSingletonManager.getInsultService();
+
+        this.textCommandManager = globalSingletonManager.getTextCommandManager();
         this.textCommands = textCommandManager.getTextCommands();
 
-        this.slashCommandManager = new SlashCommandManager();
+        this.slashCommandManager = globalSingletonManager.getSlashCommandManager();
         this.slashCommands = slashCommandManager.getSlashCommands();
     }
 
@@ -69,11 +75,11 @@ public class GlobalListener extends ListenerAdapter {
         }
     }
 
-    public void rollInsult(@NotNull MessageReceivedEvent event) {
+    private void rollInsult(@NotNull MessageReceivedEvent event) {
         Random random = new Random();
 
         if (random.nextInt(100) <= insultThreshold) {
-            InsultService.insult(event);
+            insultService.insult(event);
         }
     }
 }
