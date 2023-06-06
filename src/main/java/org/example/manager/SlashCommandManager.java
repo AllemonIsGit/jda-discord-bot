@@ -8,6 +8,7 @@ import org.example.slashcommand.SlashClear;
 import org.example.slashcommand.SlashCommand;
 import org.example.slashcommand.music.SlashPlay;
 import org.example.slashcommand.music.SlashSkip;
+import org.example.slashcommand.music.SlashStop;
 import org.example.slashcommand.music.SlashVolume;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class SlashCommandManager {
         register(new SlashPlay());
         register(new SlashSkip());
         register(new SlashVolume());
+        register(new SlashStop());
     }
 
     private void register(SlashCommand command) {
