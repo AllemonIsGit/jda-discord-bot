@@ -15,7 +15,9 @@ public class Main {
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("for your inputs!"))
                 .addEventListeners(new GlobalListener())
-                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
+                .enableIntents(GatewayIntent.MESSAGE_CONTENT,
+                        GatewayIntent.GUILD_VOICE_STATES,
+                        GatewayIntent.GUILD_MESSAGES)
                 .build();
     }
 }

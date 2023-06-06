@@ -6,6 +6,7 @@ import org.example.service.InsultService;
 import org.example.slashcommand.SlashAddInsult;
 import org.example.slashcommand.SlashClear;
 import org.example.slashcommand.SlashCommand;
+import org.example.slashcommand.SlashPlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class SlashCommandManager {
     private SlashCommandManager() {
         register(new SlashClear());
         register(new SlashAddInsult(InsultService.getInstance()));
+        register(new SlashPlay());
     }
 
     private void register(SlashCommand command) {
