@@ -1,4 +1,4 @@
-package org.example.slashcommand;
+package org.example.slashcommand.music;
 
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.example.manager.PlayerManager;
+import org.example.slashcommand.SlashCommand;
 
 public class SlashPlay implements SlashCommand {
     private String commandName = "play";
