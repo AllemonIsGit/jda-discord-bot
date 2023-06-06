@@ -20,6 +20,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public TrackScheduler(AudioPlayer player) {
         super();
         this.player = player;
+        this.player.setVolume(50);
     }
 
     public void queue(AudioTrack track) {

@@ -24,7 +24,7 @@ public class SlashClear implements SlashCommand {
 
     @Override
     public CommandData getData() {
-        return data;
+        return this.data;
     }
 
     @Override

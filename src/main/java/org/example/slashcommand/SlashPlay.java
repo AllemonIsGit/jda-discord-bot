@@ -23,15 +23,15 @@ public class SlashPlay implements SlashCommand {
 
     @Override
     public CommandData getData() {
-        return data;
+        return this.data;
     }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         Member member = event.getMember();
-        GuildVoiceState voiceState = member.getVoiceState();
+        GuildVoiceState memberVoiceState = member.getVoiceState();
 
-        if (!voiceState.inAudioChannel()) {
+        if (!memberVoiceState.inAudioChannel()) {
             event.reply("You need to be in a voice channel.").setEphemeral(true).queue();
             return;
         }
@@ -40,9 +40,9 @@ public class SlashPlay implements SlashCommand {
         GuildVoiceState selfState = self.getVoiceState();
 
         if (!selfState.inAudioChannel()) {
-            event.getGuild().getAudioManager().openAudioConnection(voiceState.getChannel());
+            event.getGuild().getAudioManager().openAudioConnection(memberVoiceState.getChannel());
         } else {
-            if (selfState.getChannel() != voiceState.getChannel()) {
+            if (selfState.getChannel() != memberVoiceState.getChannel()) {
                 event.reply("I'm in a different channel right now.").setEphemeral(true).queue();
                 return;
             }
