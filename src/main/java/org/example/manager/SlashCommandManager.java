@@ -6,6 +6,7 @@ import org.example.service.InsultService;
 import org.example.slashcommand.SlashAddInsult;
 import org.example.slashcommand.SlashClear;
 import org.example.slashcommand.SlashCommand;
+import org.example.slashcommand.SlashDeleteInsult;
 import org.example.slashcommand.music.*;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class SlashCommandManager {
         register(new SlashVolume());
         register(new SlashStop());
         register(new SlashNowPlaying());
+        register(new SlashDeleteInsult());
     }
 
     private void register(SlashCommand command) {

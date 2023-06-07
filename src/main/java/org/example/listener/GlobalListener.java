@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 public class GlobalListener extends ListenerAdapter {
     private final TextCommandManager textCommandManager;
@@ -24,7 +23,7 @@ public class GlobalListener extends ListenerAdapter {
     private final List<SlashCommand> slashCommands;
     private final EventService eventService;
     private final InsultService insultService;
-    private final Integer insultThreshold = 20;
+    private final Integer insultThreshold = 5;
 
     public GlobalListener() {
         this.eventService = EventService.getInstance();
@@ -58,7 +57,8 @@ public class GlobalListener extends ListenerAdapter {
         List<String> splitMessage = eventService.splitMessageOnSpace(eventService.getMessageFromEvent(event));
 
         if (!eventService.checkForPrefix(splitMessage.get(0))) {
-            rollInsult(event);
+            //TODO
+//            rollInsult(event);
             return;
         }
 
@@ -71,11 +71,12 @@ public class GlobalListener extends ListenerAdapter {
         }
     }
 
-    private void rollInsult(@NotNull MessageReceivedEvent event) {
-        Random random = new Random();
-
-        if (random.nextInt(100) <= insultThreshold) {
-            insultService.insult(event);
-        }
-    }
+    //TODO need to be able to exclude yourself from this before going live
+//    private void rollInsult(@NotNull MessageReceivedEvent event) {
+//        Random random = new Random();
+//
+//        if (random.nextInt(100) <= insultThreshold) {
+//            insultService.insult(event);
+//        }
+//    }
 }

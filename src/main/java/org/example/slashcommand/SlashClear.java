@@ -1,5 +1,6 @@
 package org.example.slashcommand;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -29,12 +30,10 @@ public class SlashClear implements SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        Integer quantity;
-        try {
-            quantity = event.getInteraction().getOption(optionName).getAsInt();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            event.reply("Something went wrong").setEphemeral(true).queue();
+        Integer quantity = event.getInteraction().getOption(optionName).getAsInt();
+
+        if (!event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            event.reply("You can't do that.").setEphemeral(true).queue();
             return;
         }
 

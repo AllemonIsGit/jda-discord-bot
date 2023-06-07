@@ -19,6 +19,14 @@ public class InsultRepository {
         this.sessionFactory = configuration.buildSessionFactory();
     }
 
+    public static InsultRepository getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new InsultRepository();
+            return INSTANCE;
+        }
+        return INSTANCE;
+    }
+
     public void save(Insult insult) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -28,7 +36,7 @@ public class InsultRepository {
         session.close();
     }
 
-    public List<Insult> findAll() {
+    public List<Insult> findAllInsults() {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
@@ -41,11 +49,23 @@ public class InsultRepository {
         return list;
     }
 
-    public static InsultRepository getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new InsultRepository();
-            return INSTANCE;
-        }
-        return INSTANCE;
+    public void delete(Insult insult) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        session.remove(insult);
+        transaction.commit();
+        session.close();
+    }
+
+    public void deleteById(Integer id) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        Insult insult = session.get(Insult.class, id);
+        session.remove(insult);
+
+        transaction.commit();
+        session.close();
     }
 }

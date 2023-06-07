@@ -16,13 +16,21 @@ public class InsultService {
 
     private InsultService() {
         this.insultRepository = InsultRepository.getInstance();
+        this.insults = insultRepository.findAllInsults();
+    }
 
-        this.insults = insultRepository.findAll();
+    public static InsultService getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new InsultService();
+            return INSTANCE;
+        }
+        return INSTANCE;
     }
 
     public void insult(MessageReceivedEvent event) {
         User author = event.getAuthor();
-        event.getChannel().sendMessage(author.getAsMention() + " " + getRandomInsult().getInsult()).queue();
+        Insult insult = getRandomInsult();
+        event.getChannel().sendMessage(author.getAsMention() + " " + insult.getInsult() + " (ID: " + insult.getId() + ")").queue();
     }
 
     public void register(String insult) {
@@ -44,13 +52,5 @@ public class InsultService {
 
     private Insult mapToInsult(String text) {
         return new Insult(text);
-    }
-
-    public static InsultService getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new InsultService();
-            return INSTANCE;
-        }
-        return INSTANCE;
     }
 }
