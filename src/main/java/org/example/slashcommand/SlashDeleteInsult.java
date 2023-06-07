@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
-import org.example.repository.InsultRepository;
+import org.example.service.InsultService;
 
 public class SlashDeleteInsult implements SlashCommand {
     private String name = "deleteinsult";
@@ -13,10 +13,10 @@ public class SlashDeleteInsult implements SlashCommand {
     private CommandData data;
     private String optionName = "id";
     private String optionDescription = "Provide ID of the insult you want to delete.";
-    private InsultRepository insultRepository;
+    private InsultService insultService;
 
     public SlashDeleteInsult() {
-        this.insultRepository = InsultRepository.getInstance();
+        this.insultService = InsultService.getInstance();
 
         OptionData option = new OptionData(OptionType.INTEGER, optionName, optionDescription);
         this.data = new CommandDataImpl(name, description).addOptions(option);
@@ -31,7 +31,7 @@ public class SlashDeleteInsult implements SlashCommand {
     public void execute(SlashCommandInteractionEvent event) {
         Integer id = event.getInteraction().getOption(optionName).getAsInt();
 
-        insultRepository.deleteById(id);
+        insultService.deleteById(id);
 
         event.reply("Ok!").setEphemeral(true).queue();
     }

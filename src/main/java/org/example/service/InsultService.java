@@ -45,6 +45,10 @@ public class InsultService {
         insultRepository.save(insultObject);
     }
 
+    public void deleteById(Integer id) {
+        insultRepository.deleteById(id);
+    }
+
     private Insult getRandomInsult() {
         Random random = new Random();
 

@@ -34,11 +34,13 @@ public class SlashInsultTarget implements SlashCommand {
         Member member = event.getOption(optionName).getAsMember();
         MessageChannelUnion channel = event.getChannel();
 
-        if (member != null) {
-            insultService.insult(member, channel);
-            event.reply("I hope that user won't find out it was you...").setEphemeral(true).queue();
-            return;
+        String nickname = member.getNickname();
+
+        if (nickname == null) {
+            nickname = "that user";
         }
-        event.reply("Something went wrong.").setEphemeral(true).queue();
+        
+        insultService.insult(member, channel);
+        event.reply("I hope " + nickname + " won't find out it was you...").setEphemeral(true).queue();
     }
 }
