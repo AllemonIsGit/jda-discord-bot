@@ -1,6 +1,8 @@
 package org.example.service;
 
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.example.domain.exception.InsultNotFoundException;
 import org.example.domain.model.Insult;
@@ -32,12 +34,15 @@ public class InsultService {
         Insult insult = getRandomInsult();
         event.getChannel().sendMessage(author.getAsMention() + " " + insult.getInsult() + " (ID: " + insult.getId() + ")").queue();
     }
+    public void insult(Member member, MessageChannelUnion channel) {
+        Insult insult = getRandomInsult();
+        channel.sendMessage(member.getAsMention() + " " + insult.getInsult() + " (ID: " + insult.getId() + ")").queue();
+    }
 
     public void register(String insult) {
         Insult insultObject = mapToInsult(insult);
         insults.add(insultObject);
         insultRepository.save(insultObject);
-
     }
 
     private Insult getRandomInsult() {

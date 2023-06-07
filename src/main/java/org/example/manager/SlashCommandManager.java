@@ -3,10 +3,7 @@ package org.example.manager;
 import lombok.Getter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.example.service.InsultService;
-import org.example.slashcommand.SlashAddInsult;
-import org.example.slashcommand.SlashClear;
-import org.example.slashcommand.SlashCommand;
-import org.example.slashcommand.SlashDeleteInsult;
+import org.example.slashcommand.*;
 import org.example.slashcommand.music.*;
 
 import java.util.ArrayList;
@@ -26,6 +23,7 @@ public class SlashCommandManager {
         register(new SlashStop());
         register(new SlashNowPlaying());
         register(new SlashDeleteInsult());
+        register(new SlashInsultTarget());
     }
 
     private void register(SlashCommand command) {
