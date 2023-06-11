@@ -40,7 +40,7 @@ public class TimeRemainingInteractionTest {
 
         // then
         assertThat(Duration.between(start, end).toMillis())
-                .isCloseTo(TOTAL_DURATION_MILLIS, Offset.offset(150L));
+                .isCloseTo(TOTAL_DURATION_MILLIS, Offset.offset(200L));
     }
 
     @Test

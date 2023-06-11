@@ -13,15 +13,16 @@ import static org.mockito.Mockito.*;
 
 public class GambleListenerTest {
 
-    private static final String GAMBLE_START_MESSAGE = "!gamble start";
+    private static final String GAMBLE_START_MESSAGE = "!gamble";
 
     @Test
     @SuppressWarnings("unchecked")
     public void shouldExecuteActionInteractionWhenChannelIsNotBusy() {
         // given
-        val channelLockedInteraction = (Interaction<MessageReceivedEvent, ?>) mock(Interaction.class);
-        val actionInteraction = (Interaction<MessageReceivedEvent, ?>) mock(Interaction.class);
-        when(actionInteraction.apply(any(MessageReceivedEvent.class))).thenReturn(CompletableFuture.completedFuture(null));
+        val channelLockedInteraction = (Interaction<MessageReceivedEvent, Void>) mock(Interaction.class);
+        val actionInteraction = (Interaction<MessageReceivedEvent, Void>) mock(Interaction.class);
+        when(actionInteraction.apply(any(MessageReceivedEvent.class)))
+                .thenReturn(CompletableFuture.completedFuture(null));
 
         val gambleListener = new GambleListener(channelLockedInteraction, actionInteraction);
 
