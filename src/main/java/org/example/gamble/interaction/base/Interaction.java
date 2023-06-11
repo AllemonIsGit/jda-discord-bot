@@ -8,12 +8,8 @@ public abstract class Interaction<T, R> {
     public abstract CompletableFuture<R> apply(T input);
 
     public final R applyAndWait(T input) {
-        return executeAndWait(apply(input));
-    }
-
-    public static <V> V executeAndWait(CompletableFuture<V> future) {
         try {
-            return future.get();
+            return apply(input).get();
         } catch (ExecutionException e) {
             throw new InteractionException(e.getCause());
         } catch (InterruptedException e) {

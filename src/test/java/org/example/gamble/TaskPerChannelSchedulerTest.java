@@ -3,6 +3,7 @@ package org.example.gamble;
 import lombok.val;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import org.assertj.core.data.Offset;
+import org.example.gamble.utils.Threading;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -90,16 +91,8 @@ public class TaskPerChannelSchedulerTest {
 
     private CompletableFuture<Instant> completionTimeRecordingFuture() {
         return CompletableFuture.supplyAsync(() -> {
-            trySleep(1000);
+            Threading.sleep(1000);
             return Instant.now();
         });
-    }
-
-    private void trySleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-
-        }
     }
 }

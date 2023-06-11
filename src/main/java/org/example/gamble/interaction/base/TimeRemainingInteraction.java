@@ -4,6 +4,7 @@ import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import org.example.gamble.utils.Futures;
 
 import java.time.Duration;
 import java.util.List;
@@ -16,11 +17,10 @@ public class TimeRemainingInteraction extends Interaction<TextChannel, Void> {
 
     @Override
     public CompletableFuture<Void> apply(TextChannel input) {
-        return getNotificationTasks(input)
-                .fold(CompletableFuture.completedFuture(null), this::executeNext);
+        return Futures.sequence(createNotifications(input), Notification::getFuture);
     }
 
-    private Stream<CompletableFuture<Void>> getNotificationTasks(TextChannel channel) {
+    private Stream<Notification> createNotifications(TextChannel channel) {
         final Seq<Duration> durationsToWait = Stream.ofAll(durations)
                 .toList();
 
@@ -29,25 +29,14 @@ public class TimeRemainingInteraction extends Interaction<TextChannel, Void> {
                 .map(remaining -> remaining.reduce(Duration::plus));
 
         return durationsToWait
-                .zipWith(durationsToNotify, (toWait, toNotify) -> getNotificationTask(toWait, toNotify, channel))
+                .zipWith(durationsToNotify, (toWait, toNotify) -> new Notification(toWait, toNotify, channel))
                 .toStream();
     }
 
-    private CompletableFuture<Void> getNotificationTask(Duration toWait, Duration toNotify, TextChannel textChannel) {
-        return textChannel.sendMessage("Seconds remaining: " + toNotify.getSeconds())
-                .submit()
-                .thenAccept($ -> trySleep(toWait.toMillis()));
-    }
-
-    private CompletableFuture<Void> executeNext(CompletableFuture<Void> first, CompletableFuture<Void> second) {
-        return first.thenCompose($ -> second);
-    }
-
-    private void trySleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-
+    private record Notification(Duration toWait, Duration toNotify, TextChannel textChannel) {
+        public CompletableFuture<Void> getFuture() {
+            return textChannel.sendMessage("Seconds remaining: " + toNotify.getSeconds()).submit()
+                    .thenCompose($ -> Futures.waitMillis(toWait.toMillis()));
         }
     }
 }
