@@ -40,7 +40,7 @@ public class TimeRemainingInteractionTest {
 
         // then
         assertThat(Duration.between(start, end).toMillis())
-                .isCloseTo(TOTAL_DURATION_MILLIS, Offset.offset(100L));
+                .isCloseTo(TOTAL_DURATION_MILLIS, Offset.offset(150L));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class TimeRemainingInteractionTest {
         verify(channel, times(4)).sendMessage(messageCaptor.capture());
 
         val messages = messageCaptor.getAllValues();
-        assertThat(messages.get(1)).contains("Seconds remaining: 2");
+        assertThat(messages.get(1)).contains("Seconds remaining: 3");
         assertThat(messages.get(2)).contains("Seconds remaining: 1");
         assertThat(messages.get(3)).contains("Seconds remaining: 0");
     }

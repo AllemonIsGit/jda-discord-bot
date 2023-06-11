@@ -1,5 +1,7 @@
 package org.example.gamble.interaction.base;
 
+import io.vavr.collection.Seq;
+import io.vavr.collection.Stream;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
@@ -14,15 +16,31 @@ public class TimeRemainingInteraction extends Interaction<TextChannel, Void> {
 
     @Override
     public CompletableFuture<Void> apply(TextChannel input) {
-        return durations.stream()
-                .map(duration -> createDurationNotification(duration, input))
-                .reduce(CompletableFuture.completedFuture(null), (next, acc) -> acc.thenCompose($ -> next));
+        return getNotificationTasks(input)
+                .fold(CompletableFuture.completedFuture(null), this::executeNext);
     }
 
-    private CompletableFuture<Void> createDurationNotification(Duration duration, TextChannel textChannel) {
-        return textChannel.sendMessage(String.format("Seconds remaining: %d", duration.getSeconds()))
+    private Stream<CompletableFuture<Void>> getNotificationTasks(TextChannel channel) {
+        final Seq<Duration> durationsToWait = Stream.ofAll(durations)
+                .toList();
+
+        final Seq<Duration> durationsToNotify = Stream.iterate(durationsToWait, Seq::tail)
+                .takeWhile(Seq::nonEmpty)
+                .map(remaining -> remaining.reduce(Duration::plus));
+
+        return durationsToWait
+                .zipWith(durationsToNotify, (toWait, toNotify) -> getNotificationTask(toWait, toNotify, channel))
+                .toStream();
+    }
+
+    private CompletableFuture<Void> getNotificationTask(Duration toWait, Duration toNotify, TextChannel textChannel) {
+        return textChannel.sendMessage("Seconds remaining: " + toNotify.getSeconds())
                 .submit()
-                .thenAccept($ -> trySleep(duration.toMillis()));
+                .thenAccept($ -> trySleep(toWait.toMillis()));
+    }
+
+    private CompletableFuture<Void> executeNext(CompletableFuture<Void> first, CompletableFuture<Void> second) {
+        return first.thenCompose($ -> second);
     }
 
     private void trySleep(long millis) {
