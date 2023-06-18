@@ -2,57 +2,77 @@ package org.example.gamble;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.example.gamble.interaction.base.DeleteMessageInteraction;
-import org.example.gamble.interaction.base.ErrorInteraction;
+import org.example.gamble.interaction.base.ActionNotAllowedInteraction;
 import org.example.gamble.interaction.base.Interaction;
+import org.example.gamble.interaction.base.SomethingWentWrongInteraction;
 import org.example.gamble.interaction.gamble.PerformGambleInteraction;
+import org.example.gamble.utils.Futures;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 public class GambleListener extends ListenerAdapter {
 
-    private static final Predicate<String> GAMBLE_INIT_MESSAGE_PREDICATE = "!gamble"::equals;
+    private final Locker<Channel> channelLocker = new Locker<>(Comparator.comparing(Channel::getId));
+
+    private final Interaction<SlashCommandInteractionEvent, Void> errorInteraction;
+
+    private final Interaction<SlashCommandInteractionEvent, Void> actionNotAllowedInteraction;
+
+    private final Interaction<SlashCommandInteractionEvent, Void> performGambleInteraction;
 
     public GambleListener() {
-        this(new DeleteMessageInteraction(), new PerformGambleInteraction());
+        this.errorInteraction = new SomethingWentWrongInteraction();
+        this.actionNotAllowedInteraction = new ActionNotAllowedInteraction();
+        this.performGambleInteraction = new PerformGambleInteraction();
     }
 
-    private final TaskPerChannelScheduler taskPerChannelScheduler = new TaskPerChannelScheduler();
-
-    private final Interaction<TextChannel, Void> errorInteraction = new ErrorInteraction();
-
-    private final Interaction<MessageReceivedEvent, Void> channelLockedInteraction;
-
-    private final Interaction<MessageReceivedEvent, Void> actionInteraction;
+    @Override
+    public void onGuildReady(@NotNull GuildReadyEvent event) {
+        event.getGuild()
+                .updateCommands()
+                .addCommands(SlashCommands.INIT_GAMBLE, SlashCommands.PLACE_BET)
+                .queue();
+    }
 
     @Override
-    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (GAMBLE_INIT_MESSAGE_PREDICATE.test(event.getMessage().getContentRaw())) {
-            onGambleInitRequest(event);
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        val targetChannel = event.getChannel().asTextChannel();
+
+        switch (event.getFullCommandName()) {
+            case SlashCommands.INIT_GAMBLE_COMMAND_NAME -> onGambleInit(event, targetChannel);
+            case SlashCommands.PLACE_BET_COMMAND_NAME -> onPlaceBet(event, targetChannel);
         }
     }
 
-    private void onGambleInitRequest(MessageReceivedEvent event) {
-        val targetChannel = event.getChannel().asTextChannel();
-        if (taskPerChannelScheduler.isBusy(targetChannel)) {
-            channelLockedInteraction.applyAndWait(event);
+    private void onGambleInit(@NotNull SlashCommandInteractionEvent event, TextChannel targetChannel) {
+        if (channelLocker.isLocked(targetChannel)) {
+            Futures.complete(actionNotAllowedInteraction.apply(event));
             return;
         }
 
-        val gambleTask = actionInteraction.apply(event)
-                .exceptionallyCompose(error -> reportException(error, targetChannel));
-        taskPerChannelScheduler.executeWhenAvailable(targetChannel, gambleTask);
+        channelLocker.lock(targetChannel);
+        performGambleInteraction.apply(event)
+                .thenAccept($ -> channelLocker.unlock(targetChannel))
+                .exceptionallyCompose(error -> reportException(error, event));
     }
 
-    private CompletableFuture<Void> reportException(Throwable throwable, TextChannel targetChannel) {
+    private void onPlaceBet(@NotNull SlashCommandInteractionEvent event, TextChannel targetChannel) {
+        if (!channelLocker.isLocked(targetChannel)) {
+            Futures.complete(actionNotAllowedInteraction.apply(event));
+        }
+    }
+
+    private CompletableFuture<Void> reportException(Throwable throwable, SlashCommandInteractionEvent event) {
         System.err.println(getClass().getSimpleName() + ": " + throwable.getMessage());
         throwable.printStackTrace();
-        return errorInteraction.apply(targetChannel);
+        return errorInteraction.apply(event);
     }
 }

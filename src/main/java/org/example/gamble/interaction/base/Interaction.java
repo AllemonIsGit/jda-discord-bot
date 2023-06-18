@@ -1,19 +1,7 @@
 package org.example.gamble.interaction.base;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 
-public abstract class Interaction<T, R> {
-
-    public abstract CompletableFuture<R> apply(T input);
-
-    public final R applyAndWait(T input) {
-        try {
-            return apply(input).get();
-        } catch (ExecutionException e) {
-            throw new InteractionException(e.getCause());
-        } catch (InterruptedException e) {
-            throw new InteractionException(e);
-        }
-    }
+public interface Interaction<T, R> extends Function<T, CompletableFuture<R>> {
 }
