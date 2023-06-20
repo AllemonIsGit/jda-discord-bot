@@ -1,0 +1,75 @@
+package org.example.repository;
+
+import org.example.domain.exception.GuildUserNotFoundException;
+import org.example.domain.model.GuildUser;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+public class GuildUserRepository {
+    private static GuildUserRepository INSTANCE;
+    private final Configuration configuration;
+    private final SessionFactory sessionFactory;
+
+    private GuildUserRepository() {
+        this.configuration = new Configuration().configure();
+        this.sessionFactory = configuration.buildSessionFactory();
+    }
+
+    public static GuildUserRepository getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new GuildUserRepository();
+            return INSTANCE;
+        }
+        return INSTANCE;
+    }
+
+    public GuildUser getUserById(Integer id) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        GuildUser user = session.get(GuildUser.class, id);
+
+        if (user == null) {
+            throw new GuildUserNotFoundException("GuildUser was not found in database.");
+        }
+        return user;
+    }
+
+    public GuildUser getUserByDiscordId(Integer id) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        GuildUser user = session.createQuery(
+                "FROM GuildUser WHERE username = :param", GuildUser.class)
+                .setParameter("param", id)
+                .uniqueResult();
+
+        if (user == null) {
+            throw new GuildUserNotFoundException("GuildUser was not found in database.");
+        }
+        return user;
+    }
+
+    public boolean existsByDiscordId(String discordId) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        GuildUser user = session.createQuery(
+                "FROM GuildUser WHERE userId = :param", GuildUser.class)
+                .setParameter("param", discordId)
+                .uniqueResult();
+
+        return user != null;
+    }
+
+    public void save(GuildUser user) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        session.persist(user);
+        transaction.commit();
+        session.close();
+    }
+}
