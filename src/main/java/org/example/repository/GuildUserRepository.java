@@ -25,6 +25,15 @@ public class GuildUserRepository {
         return INSTANCE;
     }
 
+    public void update(GuildUser user) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        session.merge(user);
+        transaction.commit();
+        session.close();
+    }
+
     public GuildUser getUserById(Integer id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -37,7 +46,7 @@ public class GuildUserRepository {
         return user;
     }
 
-    public GuildUser getUserByDiscordId(Integer id) {
+    public GuildUser getUserBySnowflakeId(String id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
