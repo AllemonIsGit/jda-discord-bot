@@ -9,8 +9,8 @@ public class GuildUser {
     @Column(nullable = false, unique = true, updatable = false)
     private Integer id;
     @Column(nullable = false)
-    private String userId;
-    private String username;
+    private String discordId;
+    private String discordUsername;
     @Column(nullable = false)
     private Integer points;
 }
