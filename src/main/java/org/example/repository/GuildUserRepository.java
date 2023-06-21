@@ -34,7 +34,7 @@ public class GuildUserRepository {
         session.close();
     }
 
-    public GuildUser getUserById(Integer id) {
+    public GuildUser getUserById(String id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 

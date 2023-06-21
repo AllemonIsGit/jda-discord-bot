@@ -8,7 +8,7 @@ import java.util.List;
 public class MessageCache {
     private static MessageCache INSTANCE;
     private final List<SimpleMessage> messages;
-    private final Integer cacheLimit = 100;
+    private final Integer cacheLimit = 1000;
 
     private MessageCache() {
         this.messages = new ArrayList<>();
