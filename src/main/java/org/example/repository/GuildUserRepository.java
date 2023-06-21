@@ -51,24 +51,31 @@ public class GuildUserRepository {
         Transaction transaction = session.beginTransaction();
 
         GuildUser user = session.createQuery(
-                "FROM GuildUser WHERE username = :param", GuildUser.class)
+                "FROM GuildUser WHERE snowflakeId = :param", GuildUser.class)
                 .setParameter("param", id)
                 .uniqueResult();
+
+        transaction.commit();
+        session.close();
 
         if (user == null) {
             throw new GuildUserNotFoundException("GuildUser was not found in database.");
         }
+
         return user;
     }
 
-    public boolean existsByDiscordId(String discordId) {
+    public boolean existsBySnowflakeId(String discordId) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
         GuildUser user = session.createQuery(
-                "FROM GuildUser WHERE userId = :param", GuildUser.class)
+                "FROM GuildUser WHERE snowflakeId = :param", GuildUser.class)
                 .setParameter("param", discordId)
                 .uniqueResult();
+
+        transaction.commit();
+        session.close();
 
         return user != null;
     }

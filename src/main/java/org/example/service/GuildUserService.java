@@ -2,6 +2,7 @@ package org.example.service;
 
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import org.example.domain.model.GuildUser;
 import org.example.repository.GuildUserRepository;
 
@@ -22,12 +23,24 @@ public class GuildUserService {
         return INSTANCE;
     }
 
+    public void awardPoints(MessageReactionAddEvent event) {
+        User user = event.getUser();
+        String snowflakeId = user.getId();
+        String discordTag = user.getAsTag();
+
+        if (!guildUserRepository.existsBySnowflakeId(user.getId())) {
+            create(snowflakeId, discordTag);
+        }
+        GuildUser guildUser = guildUserRepository.getUserBySnowflakeId(snowflakeId);
+        addPoints(guildUser, 1);
+    }
+
     public void awardPoints(MessageReceivedEvent event) {
         User user = event.getAuthor();
         String snowflakeId = user.getId();
         String discordTag = user.getAsTag();
 
-        if (!guildUserRepository.existsByDiscordId(user.getId())) {
+        if (!guildUserRepository.existsBySnowflakeId(user.getId())) {
             create(snowflakeId, discordTag);
         }
         GuildUser guildUser = guildUserRepository.getUserBySnowflakeId(snowflakeId);
@@ -39,7 +52,7 @@ public class GuildUserService {
         guildUserRepository.update(user);
     }
 
-    public void create(String snowflakeId, String discordTag) {
+    private void create(String snowflakeId, String discordTag) {
         GuildUser user = new GuildUser();
 
         user.setSnowflakeId(snowflakeId);
