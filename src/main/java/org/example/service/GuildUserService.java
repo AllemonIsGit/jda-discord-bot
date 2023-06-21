@@ -3,6 +3,7 @@ package org.example.service;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import org.example.domain.model.GuildUser;
 import org.example.repository.GuildUserRepository;
 
@@ -21,6 +22,18 @@ public class GuildUserService {
             return INSTANCE;
         }
         return INSTANCE;
+    }
+
+    public void revokePoints(MessageReactionRemoveEvent event) {
+        User user = event.getUser();
+        String snowflakeId = user.getId();
+        String discordTag = user.getAsTag();
+
+        if (!guildUserRepository.existsBySnowflakeId(user.getId())) {
+            create(snowflakeId, discordTag);
+        }
+        GuildUser guildUser = guildUserRepository.getUserBySnowflakeId(snowflakeId);
+        removePoints(guildUser, 1);
     }
 
     public void awardPoints(MessageReactionAddEvent event) {
@@ -49,6 +62,11 @@ public class GuildUserService {
 
     private void addPoints(GuildUser user, Integer amount) {
         user.setPoints(user.getPoints() + amount);
+        guildUserRepository.update(user);
+    }
+
+    private void removePoints(GuildUser user, Integer amount) {
+        user.setPoints(user.getPoints() - amount);
         guildUserRepository.update(user);
     }
 

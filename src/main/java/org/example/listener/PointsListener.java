@@ -32,7 +32,7 @@ public class PointsListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
-        super.onMessageReactionRemove(event);
+        guildUserService.revokePoints(event);
     }
 
 

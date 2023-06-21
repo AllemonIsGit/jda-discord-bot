@@ -46,7 +46,7 @@ public class GuildUserRepository {
         return user;
     }
 
-    public GuildUser getUserBySnowflakeId(String id) {
+    public GuildUser getUserBySnowflakeId(String id) throws GuildUserNotFoundException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
