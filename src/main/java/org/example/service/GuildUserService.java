@@ -74,12 +74,12 @@ public class GuildUserService {
     }
 
     private void addPoints(GuildUser user, Integer amount) {
-        user.setPoints(user.getPoints() + amount);
+        user.addPoints(amount);
         guildUserRepository.update(user);
     }
 
     private void removePoints(GuildUser user, Integer amount) {
-        user.setPoints(user.getPoints() - amount);
+        user.subtractPoints(amount);
         guildUserRepository.update(user);
     }
 

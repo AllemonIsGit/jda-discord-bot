@@ -17,4 +17,15 @@ public class GuildUser {
     private String discordTag;
     @Column(nullable = false)
     private Integer points;
+
+
+    // This does not update the entity in the database
+    public void addPoints(Integer amount) {
+        this.points += amount;
+    }
+
+    // This does not update the entity in the database
+    public void subtractPoints(Integer amount) {
+        this.points -= amount;
+    }
 }
