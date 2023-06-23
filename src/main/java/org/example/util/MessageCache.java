@@ -1,5 +1,6 @@
 package org.example.util;
 
+import lombok.Getter;
 import org.example.domain.exception.CachedMessageException;
 
 import java.util.ArrayList;
@@ -7,7 +8,8 @@ import java.util.List;
 
 public class MessageCache {
     private static MessageCache INSTANCE;
-    private final List<SimpleMessage> messages;
+    private List<SimpleMessage> messages;
+    @Getter
     private final Integer cacheLimit = 1000;
 
     private MessageCache() {
@@ -40,5 +42,9 @@ public class MessageCache {
                 .map(SimpleMessage::getAuthorSnowflakeId)
                 .findFirst()
                 .orElseThrow(() -> new CachedMessageException("Can't find cached author."));
+    }
+
+    public void clearCache() {
+        this.messages = new ArrayList<>();
     }
 }
