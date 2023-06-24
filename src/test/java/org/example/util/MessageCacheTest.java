@@ -1,44 +1,43 @@
 package org.example.util;
 
-import org.junit.jupiter.api.Assertions;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class MessageCacheTest {
+    private MessageCache messageCache;
+
+    @BeforeEach
+    void beforeEach() {
+        this.messageCache = MessageCache.getInstance();
+        messageCache.clearCache();
+    }
 
     @Test
     void messageShouldExist() {
         //given
-        MessageCache messageCache = MessageCache.getInstance();
-        messageCache.clearCache();
-
         SimpleMessage message = new SimpleMessage("1", "1");
 
         //when
         messageCache.add(message);
 
         //then
-        Assertions.assertTrue(messageCache.existsByMessageId(message.getMessageId()));
+        assertThat(messageCache.existsByMessageId(message.getMessageId())).isTrue();
     }
 
     @Test
     void messageShouldNotExist() {
-        //given
-        MessageCache messageCache = MessageCache.getInstance();
-        messageCache.clearCache();
-
-        //when
-        //then
-        Assertions.assertFalse(messageCache.existsByMessageId("1"));
+        assertThat(messageCache.existsByMessageId("1")).isFalse();
     }
 
     @Test
     void allShouldExist() {
         //given
-        MessageCache messageCache = MessageCache.getInstance();
-        messageCache.clearCache();
 
         List<SimpleMessage> list = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
@@ -48,14 +47,14 @@ class MessageCacheTest {
 
         //when
         list.forEach(messageCache::add);
+
         //then
-        list.forEach((e) -> Assertions.assertTrue(messageCache.existsByMessageId(e.getMessageId())));
+        list.forEach((e) -> assertThat(messageCache.existsByMessageId(e.getMessageId())).isTrue());
     }
 
     @Test
     void firstShouldNotExist() {
-        MessageCache messageCache = MessageCache.getInstance();
-        messageCache.clearCache();
+        //given
 
         List<SimpleMessage> list = new ArrayList<>();
         for (int i = 0; i <= messageCache.getCacheLimit() + 1; i++) {
@@ -65,8 +64,9 @@ class MessageCacheTest {
 
         //when
         list.forEach(messageCache::add);
+
         //then
-        Assertions.assertFalse(messageCache.existsByMessageId(list.get(0).getMessageId()));
+        assertThat(messageCache.existsByMessageId(list.get(0).getMessageId())).isFalse();
     }
 
 }
