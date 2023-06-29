@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class GlobalListener extends ListenerAdapter {
     private final TextCommandManager textCommandManager;
@@ -23,7 +24,7 @@ public class GlobalListener extends ListenerAdapter {
     private final List<SlashCommand> slashCommands;
     private final EventService eventService;
     private final InsultService insultService;
-    private final Integer insultThreshold = 5;
+    private final Integer insultChance = 5;
 
     public GlobalListener() {
         this.eventService = EventService.getInstance();
@@ -56,9 +57,8 @@ public class GlobalListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         List<String> splitMessage = eventService.splitMessageOnSpace(eventService.getMessageFromEvent(event));
 
-        if (!eventService.checkForPrefix(splitMessage.get(0))) {
-            //TODO
-//            rollInsult(event);
+        if (!eventService.checkForPrefix(splitMessage.get(0)) && !event.getAuthor().isBot()) {
+            rollInsult(event);
             return;
         }
 
@@ -71,12 +71,11 @@ public class GlobalListener extends ListenerAdapter {
         }
     }
 
-    //TODO need to be able to exclude yourself from this before going live
-//    private void rollInsult(@NotNull MessageReceivedEvent event) {
-//        Random random = new Random();
-//
-//        if (random.nextInt(100) <= insultThreshold) {
-//            insultService.insult(event);
-//        }
-//    }
+    private void rollInsult(@NotNull MessageReceivedEvent event) {
+        Random random = new Random();
+
+        if (random.nextInt(100) <= insultChance) {
+            insultService.insult(event);
+        }
+    }
 }

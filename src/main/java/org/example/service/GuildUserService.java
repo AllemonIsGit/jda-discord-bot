@@ -36,7 +36,7 @@ public class GuildUserService {
         if (!guildUserRepository.existsBySnowflakeId(user.getId())) {
             create(snowflakeId, discordTag);
         }
-        GuildUser guildUser = guildUserRepository.getUserBySnowflakeId(snowflakeId);
+        GuildUser guildUser = guildUserRepository.getGuildUserBySnowflakeId(snowflakeId);
         removePoints(guildUser, 1);
     }
 
@@ -57,7 +57,7 @@ public class GuildUserService {
         if (!guildUserRepository.existsBySnowflakeId(user.getId())) {
             create(snowflakeId, discordTag);
         }
-        GuildUser guildUser = guildUserRepository.getUserBySnowflakeId(snowflakeId);
+        GuildUser guildUser = guildUserRepository.getGuildUserBySnowflakeId(snowflakeId);
         addPoints(guildUser, 1);
     }
 
@@ -69,7 +69,7 @@ public class GuildUserService {
         if (!guildUserRepository.existsBySnowflakeId(user.getId())) {
             create(snowflakeId, discordTag);
         }
-        GuildUser guildUser = guildUserRepository.getUserBySnowflakeId(snowflakeId);
+        GuildUser guildUser = guildUserRepository.getGuildUserBySnowflakeId(snowflakeId);
         addPoints(guildUser, 1);
     }
 
@@ -84,7 +84,7 @@ public class GuildUserService {
     }
 
     private void removePoints(String userSnowflakeId, Integer amount) {
-        removePoints(guildUserRepository.getUserBySnowflakeId(userSnowflakeId), amount);
+        removePoints(guildUserRepository.getGuildUserBySnowflakeId(userSnowflakeId), amount);
     }
 
     private void create(String snowflakeId, String discordTag) {
@@ -95,5 +95,17 @@ public class GuildUserService {
         user.setPoints(0);
 
         guildUserRepository.save(user);
+    }
+
+    public GuildUser getGuildUserBySnowflakeId(String snowflakeId) {
+        return guildUserRepository.getGuildUserBySnowflakeId(snowflakeId);
+    }
+
+    public void save(GuildUser guildUser) {
+        guildUserRepository.save(guildUser);
+    }
+
+    public void update(GuildUser guildUser) {
+        guildUserRepository.update(guildUser);
     }
 }
