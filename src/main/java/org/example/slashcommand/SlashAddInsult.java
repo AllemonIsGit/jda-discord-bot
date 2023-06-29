@@ -15,8 +15,8 @@ public class SlashAddInsult implements SlashCommand {
     private final CommandData data;
     private final InsultService insultService;
 
-    public SlashAddInsult(InsultService insultService) {
-        this.insultService = insultService;
+    public SlashAddInsult() {
+        this.insultService = InsultService.getInstance();
 
         OptionData option = new OptionData(OptionType.STRING, optionName, optionDescription);
         this.data = new CommandDataImpl(commandName, commandDescription).addOptions(option);

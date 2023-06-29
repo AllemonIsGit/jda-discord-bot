@@ -29,12 +29,12 @@ public class GlobalListener extends ListenerAdapter {
         this.textCommands = textCommandManager.getTextCommands();
 
         this.slashCommandManager = SlashCommandManager.getInstance();
-        this.slashCommands = slashCommandManager.getSlashCommands();
+        this.slashCommands = slashCommandManager.getGenericSlashCommands();
     }
 
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
-        List<CommandData> data = slashCommandManager.getSlashCommandsData();
+        List<CommandData> data = slashCommandManager.getGenericSlashCommandsData();
         data.forEach((e) -> event.getGuild().upsertCommand(e).queue());
     }
 
