@@ -8,14 +8,12 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.example.manager.SlashCommandManager;
 import org.example.manager.TextCommandManager;
 import org.example.service.EventService;
-import org.example.service.InsultService;
 import org.example.slashcommand.SlashCommand;
 import org.example.textcommand.TextCommand;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 public class GlobalListener extends ListenerAdapter {
     private final TextCommandManager textCommandManager;
@@ -23,12 +21,9 @@ public class GlobalListener extends ListenerAdapter {
     private final List<TextCommand> textCommands;
     private final List<SlashCommand> slashCommands;
     private final EventService eventService;
-    private final InsultService insultService;
-    private final Integer insultChance = 5;
 
     public GlobalListener() {
         this.eventService = EventService.getInstance();
-        this.insultService = InsultService.getInstance();
 
         this.textCommandManager = TextCommandManager.getInstance();
         this.textCommands = textCommandManager.getTextCommands();
@@ -38,19 +33,9 @@ public class GlobalListener extends ListenerAdapter {
     }
 
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        String command = event.getFullCommandName();
-        for (SlashCommand slashCommand : slashCommands) {
-            if (Objects.equals(command, slashCommand.getData().getName())) {
-                slashCommand.execute(event);
-            }
-        }
-    }
-
-    @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
         List<CommandData> data = slashCommandManager.getSlashCommandsData();
-        event.getGuild().updateCommands().addCommands(data).queue();
+        data.forEach((e) -> event.getGuild().upsertCommand(e).queue());
     }
 
     @Override
@@ -58,7 +43,6 @@ public class GlobalListener extends ListenerAdapter {
         List<String> splitMessage = eventService.splitMessageOnSpace(eventService.getMessageFromEvent(event));
 
         if (!eventService.checkForPrefix(splitMessage.get(0)) && !event.getAuthor().isBot()) {
-            rollInsult(event);
             return;
         }
 
@@ -71,11 +55,13 @@ public class GlobalListener extends ListenerAdapter {
         }
     }
 
-    private void rollInsult(@NotNull MessageReceivedEvent event) {
-        Random random = new Random();
-
-        if (random.nextInt(100) <= insultChance) {
-            insultService.insult(event);
+    @Override
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        String command = event.getFullCommandName();
+        for (SlashCommand slashCommand : slashCommands) {
+            if (Objects.equals(command, slashCommand.getData().getName())) {
+                slashCommand.execute(event);
+            }
         }
     }
 }

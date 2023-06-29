@@ -24,7 +24,6 @@ public class SlashCommandManager {
         register(new SlashNowPlaying());
         register(new SlashDeleteInsult());
         register(new SlashInsultTarget());
-        register(new SlashConsent());
     }
 
     private void register(SlashCommand command) {
