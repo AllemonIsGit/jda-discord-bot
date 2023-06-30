@@ -32,7 +32,7 @@ public class PlayerManager {
 
     public GuildMusicManager getGuildMusicManager(Guild guild) {
         return guildMusicManagers.computeIfAbsent(guild.getIdLong(), (guildId) -> {
-            GuildMusicManager guildMusicManager = new GuildMusicManager(audioPlayerManager);
+            GuildMusicManager guildMusicManager = new GuildMusicManager(audioPlayerManager, guild);
 
             guild.getAudioManager().setSendingHandler(guildMusicManager.getAudioForwarder());
             return guildMusicManager;

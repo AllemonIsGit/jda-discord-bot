@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -16,9 +17,11 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     @Getter
     private BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
+    private final Guild guild;
 
-    public TrackScheduler(AudioPlayer player) {
+    public TrackScheduler(AudioPlayer player, Guild guild) {
         super();
+        this.guild = guild;
         this.player = player;
         this.player.setVolume(50);
     }
@@ -31,7 +34,11 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        if (queue.isEmpty()) {
+            guild.getAudioManager().closeAudioConnection();
+        }
         player.startTrack(queue.poll(), false);
+
     }
 
     @Override
