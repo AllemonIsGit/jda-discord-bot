@@ -1,14 +1,12 @@
 package org.example.gamble.interaction.gamble;
 
-import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.example.gamble.Gamble;
 import org.example.gamble.WeightedRandomizer;
+import org.example.gamble.embed.GambleResultEmbed;
 import org.example.gamble.interaction.base.Interaction;
-import org.example.gamble.embed.ActiveGambleEmbed;
-import org.example.gamble.embed.CancelledGambleEmbed;
 import org.example.gamble.utils.Futures;
 
 import java.time.Duration;
@@ -21,7 +19,7 @@ public class PerformGambleInteraction implements Interaction<SlashCommandInterac
 
     private final WeightedRandomizer randomizer = new WeightedRandomizer();
 
-    private final Interaction<SlashCommandInteractionEvent, Either<CancelledGambleEmbed, ActiveGambleEmbed>> prepareGambleInteraction;
+    private final Interaction<SlashCommandInteractionEvent, GambleResultEmbed> prepareGambleInteraction;
 
     public PerformGambleInteraction() {
         this(new PrepareGambleInteraction());
@@ -33,18 +31,12 @@ public class PerformGambleInteraction implements Interaction<SlashCommandInterac
                 .thenCompose(this::performGamble);
     }
 
-    private CompletableFuture<Void> performGamble(Either<CancelledGambleEmbed, ActiveGambleEmbed> resultEmbed) {
-        if (resultEmbed.isLeft()) {
-            return resultEmbed.getLeft()
-                    .update();
-        }
-
-        return resultEmbed.get()
-                .update()
-                .thenCompose($ -> selectWinner(resultEmbed.get()));
+    private CompletableFuture<Void> performGamble(GambleResultEmbed resultEmbed) {
+        return resultEmbed.update()
+                .thenCompose($ -> selectWinner(resultEmbed));
     }
 
-    private CompletableFuture<Void> selectWinner(ActiveGambleEmbed activeGambleEmbed) {
+    private CompletableFuture<Void> selectWinner(GambleResultEmbed activeGambleEmbed) {
         final Gamble gamble = activeGambleEmbed.getGamble();
         final User winner = randomizer.pick(gamble.getParticipants(), gamble::getBetForUser);
         return Futures.waitMillis(ANNOUCE_WINNER_DURATION.toMillis())

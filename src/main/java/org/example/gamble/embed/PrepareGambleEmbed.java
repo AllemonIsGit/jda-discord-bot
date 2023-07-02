@@ -1,6 +1,5 @@
 package org.example.gamble.embed;
 
-import io.vavr.control.Either;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
@@ -42,9 +41,9 @@ public class PrepareGambleEmbed extends UpdatableEmbed {
         update();
     }
 
-    public Either<CancelledGambleEmbed, ActiveGambleEmbed> finishPreparation() {
+    public GambleResultEmbed finishPreparation() {
         return gamble.getParticipants().isEmpty() ?
-                Either.left(new CancelledGambleEmbed(targetChannel, embedMessage, gamble)) :
-                Either.right(new ActiveGambleEmbed(targetChannel, embedMessage, gamble));
+                new CancelledGambleEmbed(targetChannel, embedMessage, gamble) :
+                new ActiveGambleEmbed(targetChannel, embedMessage, gamble);
     }
 }

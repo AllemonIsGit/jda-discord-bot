@@ -1,11 +1,9 @@
 package org.example.gamble.interaction.gamble;
 
-import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.example.gamble.embed.ActiveGambleEmbed;
-import org.example.gamble.embed.CancelledGambleEmbed;
+import org.example.gamble.embed.GambleResultEmbed;
 import org.example.gamble.embed.PrepareGambleEmbed;
 import org.example.gamble.interaction.base.Interaction;
 import org.example.gamble.utils.Futures;
@@ -16,14 +14,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-public class PrepareGambleInteraction implements Interaction<SlashCommandInteractionEvent, Either<CancelledGambleEmbed, ActiveGambleEmbed>> {
+public class PrepareGambleInteraction implements Interaction<SlashCommandInteractionEvent, GambleResultEmbed> {
 
     private static final Duration TOTAL_DURATION = Duration.ofSeconds(70);
 
     private static final Duration WAIT_PER_ITERATION = Duration.ofSeconds(2);
 
     @Override
-    public CompletableFuture<Either<CancelledGambleEmbed, ActiveGambleEmbed>> apply(SlashCommandInteractionEvent event) {
+    public CompletableFuture<GambleResultEmbed> apply(SlashCommandInteractionEvent event) {
         final JDA jda = event.getJDA();
         final PrepareGambleEmbed prepareGambleEmbed = new PrepareGambleEmbed(event);
         final PlaceBetMessageListener placeBetListener = new PlaceBetMessageListener(prepareGambleEmbed);

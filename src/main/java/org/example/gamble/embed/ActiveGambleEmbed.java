@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.example.gamble.Gamble;
 
-public class ActiveGambleEmbed extends UpdatableEmbed {
+public class ActiveGambleEmbed extends UpdatableEmbed implements GambleResultEmbed {
 
     @Getter
     private final Gamble gamble;
