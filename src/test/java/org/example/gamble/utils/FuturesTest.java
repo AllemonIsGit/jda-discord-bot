@@ -15,13 +15,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FuturesTest {
 
     @Test
-    public void futureIteratingTest() throws Exception {
+    public void futureWaitingMillisIsAsyncTest() {
+        // when
+        val start = Instant.now();
+        Futures.waitMillis(1000);
+        val end = Instant.now();
+
+        val durationMillis = end.toEpochMilli() - start.toEpochMilli();
+
+        // then
+        assertThat(durationMillis).isCloseTo(0, Offset.offset(10L));
+    }
+
+    @Test
+    public void futureIteratingTest() {
         // given
         val iteratingFuture = Futures.iterating(this::incrementingFuture, 5);
 
         // when
         val start = Instant.now();
-        val count = iteratingFuture.apply(0).get();
+        val count = iteratingFuture.apply(0).resultNow();
         val end = Instant.now();
 
         val durationMillis = end.toEpochMilli() - start.toEpochMilli();
@@ -37,14 +50,14 @@ public class FuturesTest {
     }
 
     @Test
-    public void futureSequenceTest() throws Exception {
+    public void futureSequenceTest() {
         // given
         val originalSequence = List.of(1, 2, 3, 4, 5);
         val resultSequence = new ArrayList<>(5);
 
         // when
         val start = Instant.now();
-        Futures.sequence(originalSequence, i -> capturingFuture(i, resultSequence::add)).get();
+        Futures.sequence(originalSequence, i -> capturingFuture(i, resultSequence::add)).resultNow();
         val end = Instant.now();
 
         val durationMillis = end.toEpochMilli() - start.toEpochMilli();
