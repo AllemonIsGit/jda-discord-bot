@@ -8,11 +8,11 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.example.service.InsultService;
 
 public class SlashDeleteInsult implements SlashCommand {
-    private String name = "deleteinsult";
-    private String description = "Deletes insult from my list.";
+    private static final String name = "deleteinsult";
+    private static final String description = "Deletes insult from my list.";
     private CommandData data;
-    private String optionName = "id";
-    private String optionDescription = "Provide ID of the insult you want to delete.";
+    private static final String optionName = "id";
+    private static final String optionDescription = "Provide ID of the insult you want to delete.";
     private InsultService insultService;
 
     public SlashDeleteInsult() {

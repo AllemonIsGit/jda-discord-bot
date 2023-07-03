@@ -8,11 +8,11 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.example.service.InsultService;
 
 public class SlashAddInsult implements SlashCommand {
-    private final String commandName = "addinsult";
-    private final String commandDescription = "adds insult to insult pool";
-    private final String optionName = "add";
-    private final String optionDescription = "type your insult here";
+    private static final String commandName = "addinsult";
+    private static final String commandDescription = "adds insult to insult pool";
     private final CommandData data;
+    private static final String optionName = "add";
+    private static final String optionDescription = "type your insult here";
     private final InsultService insultService;
 
     public SlashAddInsult() {

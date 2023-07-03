@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.example.service.InsultService;
 
 public class InsultCommand implements TextCommand {
-    private final String invokePhrase = "insultme";
+    private static final String invokePhrase = "insultme";
     private final InsultService insultService;
 
     public InsultCommand(InsultService insultService) {

@@ -10,11 +10,11 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.example.service.InsultService;
 
 public class SlashInsultTarget implements SlashCommand {
-    private String name = "insulttarget";
-    private String description = "I will insult a user, and keep you out of it.";
+    private static final String name = "insulttarget";
+    private static final String description = "I will insult a user, and keep you out of it.";
     private CommandData data;
-    private String optionName = "user";
-    private String optionDescription = "Specify a target";
+    private static final String optionName = "user";
+    private static final String optionDescription = "Specify a target";
     private InsultService insultService;
 
     public SlashInsultTarget() {

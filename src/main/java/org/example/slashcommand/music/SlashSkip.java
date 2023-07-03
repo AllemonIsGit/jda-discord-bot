@@ -10,8 +10,8 @@ import org.example.manager.PlayerManager;
 import org.example.slashcommand.SlashCommand;
 
 public class SlashSkip implements SlashCommand {
-    private String name = "skip";
-    private String description = "Skips currently playing song/video";
+    private static final String name = "skip";
+    private static final String description = "Skips currently playing song/video";
     private CommandData data;
 
 

@@ -9,11 +9,11 @@ import org.example.domain.model.GuildUser;
 import org.example.service.GuildUserService;
 
 public class SlashConsent implements SlashCommand {
-    private String name = "consent";
-    private String description = "Toggles whether or not you want to be insulted be the bot.";
+    private static final String name = "consent";
+    private static final String description = "Toggles whether or not you want to be insulted be the bot.";
     private CommandData data;
-    private String optionName = "consent";
-    private String optionDescription = "Do you want to be insulted or not?";
+    private static final String optionName = "consent";
+    private static final String optionDescription = "Do you want to be insulted or not?";
     private final GuildUserService guildUserService;
 
     public SlashConsent() {

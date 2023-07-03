@@ -11,8 +11,8 @@ import org.example.manager.PlayerManager;
 import org.example.slashcommand.SlashCommand;
 
 public class SlashStop implements SlashCommand {
-    private String name = "stop";
-    private String description = "Stop me from playing and clears playing queue.";
+    private static final String name = "stop";
+    private static final String description = "Stop me from playing and clears playing queue.";
     private CommandData data;
 
     public SlashStop() {
