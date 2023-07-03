@@ -19,12 +19,10 @@ public class InsultListener extends ListenerAdapter {
     private final EventService eventService;
     private final InsultService insultService;
     private final SlashCommandManager slashCommandManager;
-    private final List<SlashCommand> slashCommands;
     private Integer insultChance = 2;
 
     public InsultListener() {
         this.slashCommandManager = SlashCommandManager.getInstance();
-        slashCommands = slashCommandManager.getInsultSlashCommands();
 
         this.eventService = EventService.getInstance();
         this.insultService = InsultService.getInstance();
@@ -48,7 +46,7 @@ public class InsultListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         String command = event.getFullCommandName();
-        for (SlashCommand slashCommand : slashCommands) {
+        for (SlashCommand slashCommand : slashCommandManager.getInsultSlashCommands()) {
             if (Objects.equals(command, slashCommand.getData().getName())) {
                 slashCommand.execute(event);
             }
