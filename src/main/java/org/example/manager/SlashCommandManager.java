@@ -53,18 +53,16 @@ public class SlashCommandManager {
     public List<CommandData> getGenericSlashCommandsData() {
         List<CommandData> data = new ArrayList<>();
 
-        for (SlashCommand slashCommand : genericSlashCommands) {
-            data.add(slashCommand.getData());
-        }
+        genericSlashCommands.forEach((e) -> data.add(e.getData()));
+
         return data;
     }
 
     public List<CommandData> getInsultSlashCommandsData() {
         List<CommandData> data = new ArrayList<>();
 
-        for (SlashCommand slashCommand : insultSlashCommands) {
-            data.add(slashCommand.getData());
-        }
+        insultSlashCommands.forEach((e) -> data.add(e.getData()));
+
         return data;
     }
 
