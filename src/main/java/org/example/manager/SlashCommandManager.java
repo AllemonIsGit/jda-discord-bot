@@ -1,12 +1,15 @@
 package org.example.manager;
 
 import lombok.Getter;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.example.slashcommand.*;
 import org.example.slashcommand.music.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class SlashCommandManager {
     private static SlashCommandManager INSTANCE;
@@ -14,6 +17,7 @@ public class SlashCommandManager {
     private final List<SlashCommand> genericSlashCommands = new ArrayList<>();
     @Getter
     private final List<SlashCommand> insultSlashCommands = new ArrayList<>();
+    private final List<SlashCommand> allSlashCommands = new ArrayList<>();
 
     public static SlashCommandManager getInstance() {
         if (INSTANCE == null) {
@@ -39,6 +43,7 @@ public class SlashCommandManager {
 
     private void registerGenericCommand(SlashCommand command) {
         genericSlashCommands.add(command);
+        allSlashCommands.add(command);
     }
 
     private void registerInsultCommand(SlashCommand command) {
@@ -62,4 +67,12 @@ public class SlashCommandManager {
         }
         return data;
     }
+
+//    public void findAndExecuteCommand(String name, SlashCommandInteractionEvent event) {
+//        Optional<SlashCommand> command = allSlashCommands.stream()
+//                .filter((e) -> Objects.equals(e.getData().getName(), name))
+//                .findFirst();
+//
+//        command.ifPresent((e) -> e.execute(event));
+//    }
 }

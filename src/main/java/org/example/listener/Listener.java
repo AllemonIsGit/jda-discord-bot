@@ -24,11 +24,10 @@ public abstract class Listener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        String command = event.getFullCommandName();
-        for (SlashCommand slashCommand : slashCommands) {
-            if (Objects.equals(command, slashCommand.getData().getName())) {
-                slashCommand.execute(event);
-            }
-        }
+        slashCommands.stream()
+                .filter((e) -> Objects.equals(
+                        e.getData().getName(), event.getFullCommandName()))
+                .findFirst()
+                .ifPresent((e) -> e.execute(event));
     }
 }
