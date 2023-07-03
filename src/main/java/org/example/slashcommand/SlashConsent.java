@@ -30,15 +30,16 @@ public class SlashConsent implements SlashCommand {
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         Boolean consent = event.getOption(optionName).getAsBoolean();
+
         GuildUser guildUser = guildUserService.getGuildUserBySnowflakeId(event.getMember().getId());
+
+        guildUser.setInsultConsent(consent);
+        guildUserService.update(guildUser);
+
         if (consent) {
-            guildUser.setInsultConsent(true);
-            guildUserService.update(guildUser);
             event.reply("I will randomly insult you from now on!").setEphemeral(true).queue();
         }
         if (!consent) {
-            guildUser.setInsultConsent(false);
-            guildUserService.update(guildUser);
             event.reply("I'm sorry if i offended you, i won't do it from now on.").setEphemeral(true).queue();
         }
     }
