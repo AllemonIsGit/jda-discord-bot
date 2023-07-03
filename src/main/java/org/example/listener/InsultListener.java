@@ -13,43 +13,28 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 
-public class InsultListener extends ListenerAdapter {
-    private final EventService eventService;
+public final class InsultListener extends Listener {
     private final InsultService insultService;
-    private final SlashCommandManager slashCommandManager;
     private Integer insultChance = 2;
 
     public InsultListener() {
         this.slashCommandManager = SlashCommandManager.getInstance();
+        this.slashCommands = slashCommandManager.getInsultSlashCommands();
+        this.slashCommandData = slashCommandManager.getInsultSlashCommandsData();
 
         this.eventService = EventService.getInstance();
         this.insultService = InsultService.getInstance();
     }
 
     @Override
-    public void onGuildReady(GuildReadyEvent event) {
-        List<CommandData> data = slashCommandManager.getInsultSlashCommandsData();
-        data.forEach((e) -> event.getGuild().upsertCommand(e).queue());
-    }
-
-    @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        List<String> splitMessage = eventService.splitMessageOnSpace(eventService.getMessageFromEvent(event));
+        Optional<List<String>> message = eventService.handleMessageEvent(event);
 
-        if (!eventService.checkForPrefix(splitMessage.get(0)) && !event.getAuthor().isBot()) {
+        if (message.isEmpty()) {
             rollInsult(event);
-        }
-    }
-
-    @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        String command = event.getFullCommandName();
-        for (SlashCommand slashCommand : slashCommandManager.getInsultSlashCommands()) {
-            if (Objects.equals(command, slashCommand.getData().getName())) {
-                slashCommand.execute(event);
-            }
         }
     }
 

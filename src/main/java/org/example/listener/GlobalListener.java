@@ -14,54 +14,34 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
-public class GlobalListener extends ListenerAdapter {
+public final class GlobalListener extends Listener {
     private final TextCommandManager textCommandManager;
-    private final SlashCommandManager slashCommandManager;
     private final List<TextCommand> textCommands;
-    private final List<SlashCommand> slashCommands;
-    private final EventService eventService;
 
     public GlobalListener() {
         this.eventService = EventService.getInstance();
 
-        this.textCommandManager = TextCommandManager.getInstance();
-        this.textCommands = textCommandManager.getTextCommands();
-
         this.slashCommandManager = SlashCommandManager.getInstance();
         this.slashCommands = slashCommandManager.getGenericSlashCommands();
+        this.slashCommandData = slashCommandManager.getGenericSlashCommandsData();
+
+        this.textCommandManager = TextCommandManager.getInstance();
+        this.textCommands = textCommandManager.getTextCommands();
     }
 
-    @Override
-    public void onGuildReady(@NotNull GuildReadyEvent event) {
-        List<CommandData> data = slashCommandManager.getGenericSlashCommandsData();
-        data.forEach((e) -> event.getGuild().upsertCommand(e).queue());
-    }
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        List<String> splitMessage = eventService.splitMessageOnSpace(eventService.getMessageFromEvent(event));
+        Optional<List<String>> optionalMessage = eventService.handleMessageEvent(event);
 
-        if (!eventService.checkForPrefix(splitMessage.get(0)) && !event.getAuthor().isBot()) {
-            return;
-        }
-
-        splitMessage = eventService.removePrefix(splitMessage);
-
-        for (TextCommand command: textCommands) {
-            if (splitMessage.get(0).equalsIgnoreCase(command.getInvokePhrase())) {
-                command.execute(event);
+        optionalMessage.ifPresent((message) -> {
+            for (TextCommand command: textCommands) {
+                if (message.get(0).equalsIgnoreCase(command.getInvokePhrase())) {
+                    command.execute(event);
+                }
             }
-        }
-    }
-
-    @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        String command = event.getFullCommandName();
-        for (SlashCommand slashCommand : slashCommands) {
-            if (Objects.equals(command, slashCommand.getData().getName())) {
-                slashCommand.execute(event);
-            }
-        }
+        });
     }
 }
