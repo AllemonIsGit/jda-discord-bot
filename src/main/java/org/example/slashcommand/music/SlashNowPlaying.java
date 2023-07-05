@@ -15,8 +15,8 @@ import org.example.slashcommand.SlashCommand;
 import java.awt.*;
 
 public class SlashNowPlaying implements SlashCommand {
-    private String name = "nowplaying";
-    private String description = "Shows what i'm playing right now";
+    private static final String name = "nowplaying";
+    private static final String description = "Shows what i'm playing right now";
     private CommandData data;
 
     public SlashNowPlaying() {

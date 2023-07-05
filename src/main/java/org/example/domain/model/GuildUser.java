@@ -17,6 +17,8 @@ public class GuildUser {
     private String discordTag;
     @Column(nullable = false)
     private Integer points;
+    @Column(nullable = false)
+    private Boolean insultConsent = false;
 
 
     // This does not update the entity in the database

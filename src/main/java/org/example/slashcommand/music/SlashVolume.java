@@ -13,11 +13,11 @@ import org.example.manager.PlayerManager;
 import org.example.slashcommand.SlashCommand;
 
 public class SlashVolume implements SlashCommand {
-    private String name = "volume";
-    private String description = "Changes my player volume from 1% - 100%";
+    private static final String name = "volume";
+    private static final String description = "Changes my player volume from 1% - 100%";
     private CommandData data;
-    private String optionName = "amount";
-    private String optionDescription = "number the set the volume to";
+    private static final String optionName = "amount";
+    private static final String optionDescription = "number the set the volume to";
 
     public SlashVolume() {
         OptionData optionData = new OptionData(OptionType.INTEGER, optionName, optionDescription);

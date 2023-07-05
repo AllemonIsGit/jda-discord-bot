@@ -11,11 +11,11 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import java.util.List;
 
 public class SlashClear implements SlashCommand {
-    private final String commandName = "clear";
-    private final String commandDescription = "Deletes number of last posted messages";
+    private static final String commandName = "clear";
+    private static final String commandDescription = "Deletes number of last posted messages";
     private CommandData data;
-    private final String optionName = "amount";
-    private final String optionDescription = "amount to be deleted";
+    private static final String optionName = "amount";
+    private static final String optionDescription = "amount to be deleted";
 
 
     public SlashClear() {

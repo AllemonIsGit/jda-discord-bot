@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.example.listener.GlobalListener;
+import org.example.listener.InsultListener;
 import org.example.listener.PointsListener;
 
 public class Main {
@@ -15,7 +16,7 @@ public class Main {
         JDA bot = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("for your inputs!"))
-                .addEventListeners(new GlobalListener(), new PointsListener())
+                .addEventListeners(new GlobalListener(), new PointsListener(), new InsultListener())
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT,
                         GatewayIntent.GUILD_VOICE_STATES,
                         GatewayIntent.GUILD_MESSAGES,

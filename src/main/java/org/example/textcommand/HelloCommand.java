@@ -3,7 +3,7 @@ package org.example.textcommand;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class HelloCommand implements TextCommand {
-    String invokePhrase = "hello";
+    private static final String invokePhrase = "hello";
 
     @Override
     public String getInvokePhrase() {
