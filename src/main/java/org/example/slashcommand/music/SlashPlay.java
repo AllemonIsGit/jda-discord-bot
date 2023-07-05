@@ -11,11 +11,11 @@ import org.example.manager.PlayerManager;
 import org.example.slashcommand.SlashCommand;
 
 public class SlashPlay implements SlashCommand {
-    private String commandName = "play";
-    private String commandDescription = "Plays provided Youtube video (audio only)";
+    private static final String commandName = "play";
+    private static final String commandDescription = "Plays provided Youtube video (audio only)";
     private CommandData data;
-    private String optionName = "link";
-    private String optionDescription = "provide Youtube ULR";
+    private static final String optionName = "link";
+    private static final String optionDescription = "provide Youtube ULR";
 
     public SlashPlay() {
         OptionData option = new OptionData(OptionType.STRING, optionName, optionDescription);

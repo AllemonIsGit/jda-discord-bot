@@ -3,7 +3,7 @@ package org.example.textcommand;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class PolicjaCommand implements TextCommand {
-    String invokePhrase = "policja";
+    private static final String invokePhrase = "policja";
 
     @Override
     public String getInvokePhrase() {
