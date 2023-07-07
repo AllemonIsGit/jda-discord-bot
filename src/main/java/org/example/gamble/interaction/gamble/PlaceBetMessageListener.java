@@ -36,19 +36,19 @@ public class PlaceBetMessageListener extends ListenerAdapter {
             return;
         }
 
-        final Optional<Integer> parsedBet = extractBet(event);
+        final Optional<Long> parsedBet = extractBet(event);
         if (parsedBet.isEmpty()) {
             replyEphemeral(event, "Sorry, provided bet is invalid.");
             return;
         }
 
-        final int bet = parsedBet.get();
+        final Long bet = parsedBet.get();
 
         if (!canBet(event, bet)) {
             return;
         }
 
-        guildUserService.revokePoints(event.getUser().getId(), (long) bet);
+        guildUserService.revokePoints(event.getUser().getId(), bet);
 
         if (prepareGambleEmbed.addParticipant(event.getUser(), bet)) {
             replyEphemeral(event, "Bet " + bet + " placed!");
@@ -57,7 +57,7 @@ public class PlaceBetMessageListener extends ListenerAdapter {
         }
     }
 
-    private boolean canBet(SlashCommandInteractionEvent event, Integer bet) {
+    private boolean canBet(SlashCommandInteractionEvent event, Long bet) {
         User user = event.getUser();
         double currentBet = prepareGambleEmbed.getGamble().getBetForUser(user);
         Long userPoints = guildUserService.getPointsBySnowflakeId(user.getId());
@@ -74,9 +74,9 @@ public class PlaceBetMessageListener extends ListenerAdapter {
                 .equals(messageChannel.getId());
     }
 
-    private Optional<Integer> extractBet(SlashCommandInteractionEvent event) {
+    private Optional<Long> extractBet(SlashCommandInteractionEvent event) {
         try {
-            final Integer bet = event.getOption("amount", OptionMapping::getAsInt);
+            final Long bet = event.getOption("amount", OptionMapping::getAsLong);
             return Optional.ofNullable(bet)
                     .filter(amount -> amount > 0);
         } catch (Exception e) {
