@@ -49,6 +49,10 @@ public class GuildUserService {
         removePoints(authorSnowflakeId, 1);
     }
 
+    public void revokePoints(String snowflakeId, Integer amount) {
+        removePoints(snowflakeId, amount);
+    }
+
     public void awardPoints(MessageReactionAddEvent event) {
         User user = event.getUser();
         String snowflakeId = user.getId();
@@ -71,6 +75,10 @@ public class GuildUserService {
         }
         GuildUser guildUser = guildUserRepository.getGuildUserBySnowflakeId(snowflakeId);
         addPoints(guildUser, 1);
+    }
+
+    public void awardPoints(String snowflakeId, Integer amount) {
+        addPoints(getGuildUserBySnowflakeId(snowflakeId), amount);
     }
 
     private void addPoints(GuildUser user, Integer amount) {
@@ -99,6 +107,11 @@ public class GuildUserService {
 
     public GuildUser getGuildUserBySnowflakeId(String snowflakeId) {
         return guildUserRepository.getGuildUserBySnowflakeId(snowflakeId);
+    }
+
+    public Integer getPointsBySnowflakeId(String snowflake) {
+        GuildUser guildUser = getGuildUserBySnowflakeId(snowflake);
+        return guildUser.getPoints();
     }
 
     public void save(GuildUser guildUser) {

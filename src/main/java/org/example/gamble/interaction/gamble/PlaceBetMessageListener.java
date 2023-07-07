@@ -1,12 +1,14 @@
 package org.example.gamble.interaction.gamble;
 
 import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.example.gamble.SlashCommands;
 import org.example.gamble.embed.PrepareGambleEmbed;
+import org.example.service.GuildUserService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -16,6 +18,12 @@ public class PlaceBetMessageListener extends ListenerAdapter {
 
 
     private final PrepareGambleEmbed prepareGambleEmbed;
+    private final GuildUserService guildUserService;
+
+    public PlaceBetMessageListener(PrepareGambleEmbed prepareGambleEmbed) {
+        this.prepareGambleEmbed = prepareGambleEmbed;
+        this.guildUserService = GuildUserService.getInstance();
+    }
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
@@ -35,11 +43,30 @@ public class PlaceBetMessageListener extends ListenerAdapter {
         }
 
         final int bet = parsedBet.get();
+
+        if (!canBet(event, bet)) {
+            return;
+        }
+
+        guildUserService.revokePoints(event.getUser().getId(), bet);
+
         if (prepareGambleEmbed.addParticipant(event.getUser(), bet)) {
             replyEphemeral(event, "Bet " + bet + " placed!");
         } else {
             replyEphemeral(event, "Provided bet has to be greater than already placed.");
         }
+    }
+
+    private boolean canBet(SlashCommandInteractionEvent event, Integer bet) {
+        User user = event.getUser();
+        double currentBet = prepareGambleEmbed.getGamble().getBetForUser(user);
+        Integer userPoints = guildUserService.getPointsBySnowflakeId(user.getId());
+        int availablePoints = userPoints - (int) currentBet;
+        if (availablePoints < bet) {
+            replyEphemeral(event,"You don't have enough points.");
+            return false;
+        }
+        return true;
     }
 
     private boolean isInTargetChannel(Channel messageChannel) {

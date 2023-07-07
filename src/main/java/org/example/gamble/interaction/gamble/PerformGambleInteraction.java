@@ -8,6 +8,7 @@ import org.example.gamble.WeightedRandomizer;
 import org.example.gamble.embed.GambleResultEmbed;
 import org.example.gamble.interaction.base.Interaction;
 import org.example.gamble.utils.Futures;
+import org.example.service.GuildUserService;
 
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
@@ -20,6 +21,7 @@ public class PerformGambleInteraction implements Interaction<SlashCommandInterac
     private final WeightedRandomizer randomizer = new WeightedRandomizer();
 
     private final Interaction<SlashCommandInteractionEvent, GambleResultEmbed> prepareGambleInteraction;
+    private final GuildUserService guildUserService = GuildUserService.getInstance();
 
     public PerformGambleInteraction() {
         this(new PrepareGambleInteraction());
@@ -39,6 +41,7 @@ public class PerformGambleInteraction implements Interaction<SlashCommandInterac
     private CompletableFuture<Void> selectWinner(GambleResultEmbed activeGambleEmbed) {
         final Gamble gamble = activeGambleEmbed.getGamble();
         final User winner = randomizer.pick(gamble.getParticipants(), gamble::getBetForUser);
+        guildUserService.awardPoints(winner.getId(), (int) gamble.getTotalBet());
         return Futures.waitMillis(ANNOUCE_WINNER_DURATION.toMillis())
                 .thenAccept($ -> activeGambleEmbed.setWinner(winner));
     }
