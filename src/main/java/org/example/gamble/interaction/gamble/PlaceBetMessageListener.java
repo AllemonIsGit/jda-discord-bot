@@ -48,7 +48,7 @@ public class PlaceBetMessageListener extends ListenerAdapter {
             return;
         }
 
-        guildUserService.revokePoints(event.getUser().getId(), bet);
+        guildUserService.revokePoints(event.getUser().getId(), (long) bet);
 
         if (prepareGambleEmbed.addParticipant(event.getUser(), bet)) {
             replyEphemeral(event, "Bet " + bet + " placed!");
@@ -60,8 +60,8 @@ public class PlaceBetMessageListener extends ListenerAdapter {
     private boolean canBet(SlashCommandInteractionEvent event, Integer bet) {
         User user = event.getUser();
         double currentBet = prepareGambleEmbed.getGamble().getBetForUser(user);
-        Integer userPoints = guildUserService.getPointsBySnowflakeId(user.getId());
-        int availablePoints = userPoints - (int) currentBet;
+        Long userPoints = guildUserService.getPointsBySnowflakeId(user.getId());
+        double availablePoints = userPoints - (int) currentBet;
         if (availablePoints < bet) {
             replyEphemeral(event,"You don't have enough points.");
             return false;

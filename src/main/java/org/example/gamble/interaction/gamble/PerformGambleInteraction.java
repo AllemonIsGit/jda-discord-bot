@@ -41,7 +41,7 @@ public class PerformGambleInteraction implements Interaction<SlashCommandInterac
     private CompletableFuture<Void> selectWinner(GambleResultEmbed activeGambleEmbed) {
         final Gamble gamble = activeGambleEmbed.getGamble();
         final User winner = randomizer.pick(gamble.getParticipants(), gamble::getBetForUser);
-        guildUserService.awardPoints(winner.getId(), (int) gamble.getTotalBet());
+        guildUserService.awardPoints(winner.getId(), gamble.getTotalBet());
         return Futures.waitMillis(ANNOUCE_WINNER_DURATION.toMillis())
                 .thenAccept($ -> activeGambleEmbed.setWinner(winner));
     }
