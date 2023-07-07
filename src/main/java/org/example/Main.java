@@ -17,7 +17,10 @@ public class Main {
         JDA bot = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("for your inputs!"))
-                .addEventListeners(new GlobalListener(), new PointsListener(), new InsultListener(), new GambleListener())
+                .addEventListeners(new GlobalListener(),
+                        new PointsListener(),
+                        new InsultListener(),
+                        new GambleListener())
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT,
                         GatewayIntent.GUILD_VOICE_STATES,
                         GatewayIntent.GUILD_MESSAGES,
