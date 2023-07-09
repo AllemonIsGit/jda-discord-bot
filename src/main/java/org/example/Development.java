@@ -9,12 +9,18 @@ import org.example.gamble.GambleListener;
 import org.example.listener.GlobalListener;
 import org.example.listener.InsultListener;
 import org.example.listener.PointsListener;
+import org.example.repository.PersistenceConfiguration;
 
-public class Main {
-    private final static String token = System.getenv("BOT_TOKEN");
+public class Development {
+
+    private static final String TOKEN = System.getenv("BOT_TOKEN");
+
+    private static final String HIBERNATE_CONFIG = "hibernate.h2.cfg.xml";
 
     public static void main(String[] args) {
-        JDA bot = JDABuilder.createDefault(token)
+        PersistenceConfiguration.getInstance().setHibernateConfigurationFile(HIBERNATE_CONFIG);
+
+        JDA bot = JDABuilder.createDefault(TOKEN)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("for your inputs!"))
                 .addEventListeners(new GlobalListener(),
