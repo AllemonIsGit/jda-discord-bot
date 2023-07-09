@@ -3,9 +3,20 @@ package org.example.gamble.utils;
 import io.vavr.collection.Stream;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 public class Futures {
+
+    public static <T> T get(CompletableFuture<T> future) {
+        try {
+            return future.get();
+        } catch (ExecutionException e) {
+            throw new FutureEvaluationException(e.getCause());
+        } catch (InterruptedException e) {
+            throw new FutureEvaluationException("Future was interrupted");
+        }
+    }
 
     public static CompletableFuture<Void> waitMillis(long millis) {
         return CompletableFuture.supplyAsync(() -> {

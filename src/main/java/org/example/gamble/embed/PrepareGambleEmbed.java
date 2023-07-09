@@ -30,7 +30,7 @@ public class PrepareGambleEmbed extends UpdatableEmbed {
                 .build();
     }
 
-    public boolean addParticipant(User user, int bet) {
+    public boolean addParticipant(User user, Long bet) {
         final boolean result = gamble.addGambler(user, bet);
         update();
         return result;

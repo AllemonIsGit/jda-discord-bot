@@ -15,9 +15,9 @@ public class Gamble {
     private final User initiator;
 
     @Getter
-    private final Map<User, Integer> betsByUsers = Collections.synchronizedMap(new TreeMap<>(USER_COMPARATOR));
+    private final Map<User, Long> betsByUsers = Collections.synchronizedMap(new TreeMap<>(USER_COMPARATOR));
 
-    public boolean addGambler(User user, int bet) {
+    public boolean addGambler(User user, Long bet) {
         if (getBetForUser(user) >= bet) {
             return false;
         }
@@ -27,7 +27,7 @@ public class Gamble {
     }
 
     public double getBetForUser(User user) {
-        return betsByUsers.getOrDefault(user, 0);
+        return betsByUsers.getOrDefault(user, 0L);
     }
 
     public List<User> getParticipants() {
@@ -51,6 +51,6 @@ public class Gamble {
                 .sum();
     }
 
-    public record Participant(User user, Integer bet) {
+    public record Participant(User user, Long bet) {
     }
 }

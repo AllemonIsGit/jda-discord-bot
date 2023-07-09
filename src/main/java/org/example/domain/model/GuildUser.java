@@ -16,18 +16,18 @@ public class GuildUser {
     private String snowflakeId;
     private String discordTag;
     @Column(nullable = false)
-    private Integer points;
+    private Long points;
     @Column(nullable = false)
     private Boolean insultConsent = false;
 
 
     // This does not update the entity in the database
-    public void addPoints(Integer amount) {
+    public void addPoints(Long amount) {
         this.points += amount;
     }
 
     // This does not update the entity in the database
-    public void subtractPoints(Integer amount) {
+    public void subtractPoints(Long amount) {
         this.points -= amount;
     }
 }

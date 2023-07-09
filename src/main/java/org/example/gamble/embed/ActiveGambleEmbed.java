@@ -6,8 +6,14 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.example.gamble.Gamble;
+import org.example.gamble.utils.Futures;
+
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
 
 public class ActiveGambleEmbed extends UpdatableEmbed implements GambleResultEmbed {
+
+    private static final Duration ANNOUCE_WINNER_DURATION = Duration.ofSeconds(3);
 
     @Getter
     private final Gamble gamble;
@@ -29,8 +35,14 @@ public class ActiveGambleEmbed extends UpdatableEmbed implements GambleResultEmb
                 .build();
     }
 
-    public void setWinner(User winner) {
+    @Override
+    public CompletableFuture<Void> prepare() {
+        return update();
+    }
+
+    public CompletableFuture<Void> announceWinner(User winner) {
         this.winner = winner;
-        update();
+        return Futures.waitMillis(ANNOUCE_WINNER_DURATION.toMillis())
+                .thenCompose($ -> update());
     }
 }

@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.example.gamble.Gamble;
 
+import java.util.concurrent.CompletableFuture;
+
 public class CancelledGambleEmbed extends UpdatableEmbed implements GambleResultEmbed {
 
     @Getter
@@ -28,7 +30,12 @@ public class CancelledGambleEmbed extends UpdatableEmbed implements GambleResult
     }
 
     @Override
-    public void setWinner(User winner) {
-        // When gamble is cancelled this method should not do anything.
+    public CompletableFuture<Void> prepare() {
+        return update();
+    }
+
+    @Override
+    public CompletableFuture<Void> announceWinner(User winner) {
+        return CompletableFuture.completedFuture(null);
     }
 }

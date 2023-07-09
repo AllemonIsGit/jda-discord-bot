@@ -7,19 +7,17 @@ import org.example.gamble.Gamble;
 import org.example.gamble.WeightedRandomizer;
 import org.example.gamble.embed.GambleResultEmbed;
 import org.example.gamble.interaction.base.Interaction;
-import org.example.gamble.utils.Futures;
+import org.example.service.GuildUserService;
 
-import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 public class PerformGambleInteraction implements Interaction<SlashCommandInteractionEvent, Void> {
 
-    private static final Duration ANNOUCE_WINNER_DURATION = Duration.ofSeconds(3);
-
     private final WeightedRandomizer randomizer = new WeightedRandomizer();
 
     private final Interaction<SlashCommandInteractionEvent, GambleResultEmbed> prepareGambleInteraction;
+    private final GuildUserService guildUserService = GuildUserService.getInstance();
 
     public PerformGambleInteraction() {
         this(new PrepareGambleInteraction());
@@ -32,14 +30,19 @@ public class PerformGambleInteraction implements Interaction<SlashCommandInterac
     }
 
     private CompletableFuture<Void> performGamble(GambleResultEmbed resultEmbed) {
-        return resultEmbed.update()
+        return resultEmbed.prepare()
                 .thenCompose($ -> selectWinner(resultEmbed));
     }
 
-    private CompletableFuture<Void> selectWinner(GambleResultEmbed activeGambleEmbed) {
-        final Gamble gamble = activeGambleEmbed.getGamble();
+    private CompletableFuture<Void> selectWinner(GambleResultEmbed resultEmbed) {
+        final Gamble gamble = resultEmbed.getGamble();
+
+        if (gamble.getParticipants().isEmpty()) {
+            return CompletableFuture.completedFuture(null);
+        }
+
         final User winner = randomizer.pick(gamble.getParticipants(), gamble::getBetForUser);
-        return Futures.waitMillis(ANNOUCE_WINNER_DURATION.toMillis())
-                .thenAccept($ -> activeGambleEmbed.setWinner(winner));
+        guildUserService.awardPoints(winner.getId(), gamble.getTotalBet());
+        return resultEmbed.announceWinner(winner);
     }
 }

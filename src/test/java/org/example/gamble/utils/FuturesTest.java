@@ -30,11 +30,12 @@ public class FuturesTest {
     @Test
     public void futureIteratingTest() {
         // given
-        val iteratingFuture = Futures.iterating(this::incrementingFuture, 5);
+        val iteratingFutureFunction = Futures.iterating(this::incrementingFuture, 5);
 
         // when
         val start = Instant.now();
-        val count = iteratingFuture.apply(0).resultNow();
+        val runningFuture = iteratingFutureFunction.apply(0);
+        val count = Futures.get(runningFuture);
         val end = Instant.now();
 
         val durationMillis = end.toEpochMilli() - start.toEpochMilli();
@@ -45,8 +46,8 @@ public class FuturesTest {
     }
 
     private CompletableFuture<Integer> incrementingFuture(int count) {
-        Threading.sleep(100);
-        return CompletableFuture.completedFuture(count + 1);
+        return Futures.waitMillis(100)
+                .thenApply($ -> count + 1);
     }
 
     @Test
@@ -57,7 +58,8 @@ public class FuturesTest {
 
         // when
         val start = Instant.now();
-        Futures.sequence(originalSequence, i -> capturingFuture(i, resultSequence::add)).resultNow();
+        val runningFuture = Futures.sequence(originalSequence, i -> capturingFuture(i, resultSequence::add));
+        Futures.get(runningFuture);
         val end = Instant.now();
 
         val durationMillis = end.toEpochMilli() - start.toEpochMilli();
@@ -68,8 +70,7 @@ public class FuturesTest {
     }
 
     private CompletableFuture<Void> capturingFuture(int element, Consumer<Integer> captureAction) {
-        Threading.sleep(100);
-        captureAction.accept(element);
-        return CompletableFuture.completedFuture(null);
+        return Futures.waitMillis(100)
+                .thenAccept($ -> captureAction.accept(element));
     }
 }
