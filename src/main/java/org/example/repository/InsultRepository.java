@@ -15,7 +15,8 @@ public class InsultRepository {
     private final SessionFactory sessionFactory;
 
     private InsultRepository() {
-        this.configuration = new Configuration().configure();
+        final String configFile = PersistenceConfiguration.getInstance().getHibernateConfigurationFile();
+        this.configuration = new Configuration().configure(configFile);
         this.sessionFactory = configuration.buildSessionFactory();
     }
 
