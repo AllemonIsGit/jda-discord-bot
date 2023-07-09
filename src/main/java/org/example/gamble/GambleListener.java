@@ -54,7 +54,7 @@ public class GambleListener extends ListenerAdapter {
 
     private void onGambleInit(@NotNull SlashCommandInteractionEvent event, TextChannel targetChannel) {
         if (channelLocker.isLocked(targetChannel)) {
-            actionNotAllowedInteraction.apply(event).resultNow();
+            Futures.get(actionNotAllowedInteraction.apply(event));
             return;
         }
 
@@ -66,7 +66,7 @@ public class GambleListener extends ListenerAdapter {
 
     private void onPlaceBet(@NotNull SlashCommandInteractionEvent event, TextChannel targetChannel) {
         if (!channelLocker.isLocked(targetChannel)) {
-            actionNotAllowedInteraction.apply(event).resultNow();
+            Futures.get(actionNotAllowedInteraction.apply(event));
         }
     }
 

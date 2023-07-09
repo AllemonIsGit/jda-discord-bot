@@ -9,7 +9,7 @@ public interface GambleResultEmbed {
 
     Gamble getGamble();
 
-    CompletableFuture<Void> update();
+    CompletableFuture<Void> prepare();
 
-    void setWinner(User winner);
+    CompletableFuture<Void> announceWinner(User winner);
 }
